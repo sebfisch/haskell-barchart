@@ -32,6 +32,37 @@ class Num a => Measurable a where
 instance Measurable Double where
   size = id
 
+data Config = Config { padding, ratio, captionSize,
+                       labelSize, labelSep,
+                       barSep, barWidth :: Double }
+
+defaultConfig :: Config
+defaultConfig =
+  Config { padding = 10, ratio = 1, captionSize = 15,
+           labelSize = 10, labelSep = 5,
+           barSep = 100, barWidth = 20 }
+
+render :: Measurable a => FilePath -> (Int,Int) -> BarChart a -> IO ()
+render = renderWithConfig defaultConfig
+
+renderWithConfig :: Measurable a
+                 => Config -> FilePath -> (Int,Int) -> BarChart a -> IO ()
+renderWithConfig config@Config{..} filename (width,height) chart
+  = renderAs PNG filename (Width (fromIntegral width))
+  . draw config{ ratio = hratio / wratio }
+  $ chart
+ where
+  wratio = fromIntegral width / barChartWidth config chart
+  hratio = fromIntegral height / barChartHeight chart
+
+barChartWidth :: Config -> BarChart a -> Double
+barChartWidth Config{..} BarChart{..} = genericLength bars * (barSep + barWidth)
+
+barChartHeight :: Measurable a => BarChart a -> Double
+barChartHeight BarChart{..}
+  | null bars = 0
+  | otherwise = maximum (map barSize bars)
+
 barSize :: Measurable a => Bar a -> Double
 barSize Bar{..} = sum (map valueSize values)
 
@@ -39,37 +70,23 @@ valueSize :: Measurable a => Value a -> Double
 valueSize (Value x)    = size x
 valueSize Interval{..} = size mean
 
-render :: Drawable a => FilePath -> a -> IO ()
-render filename = renderAs PNG filename (Width 400) . draw defaultConfig
-
-data Config = Config { padding, ratio, 
-                       labelSize, labelSep,
-                       barSep, barWidth :: Double }
-
-defaultConfig :: Config
-defaultConfig =
-  Config { padding = 10, ratio = 1, 
-           labelSize = 10, labelSep = 5,
-           barSep = 100, barWidth = 20 }
-
 class Drawable a where
   draw :: Config -> a -> Diagram
 
 instance Measurable a => Drawable (BarChart a) where
-  draw config@Config{..} BarChart{..} =
+  draw config@Config{..} chart@BarChart{..} =
     pad padding padding $
       vcatA hcenter
-        [text (1.5*labelSize) caption,
+        [text captionSize caption,
          hdistribA (barSep/2) left bottom
            [yaxis, hdistribA barSep left bottom (map (draw config) bars)]
          // xaxis]
    where
-    width  = genericLength bars * (barSep + barWidth)
-    height | null bars = 0
-           | otherwise = maximum (map barSize bars)
+    width  = barChartWidth config chart
+    height = ratio * barChartHeight chart
 
-    xaxis = hsep labelSep [straight (pathFromVectors [(width,0)]),
-                           text labelSize xlabel]
+    xaxis = vsepA labelSep right [straight (pathFromVectors [(width,0)]),
+                                  text labelSize xlabel]
     yaxis = vsep labelSep [text labelSize ylabel,
                            straight (pathFromVectors [(0,height)])]
 
@@ -91,7 +108,7 @@ instance Measurable a => Drawable (Value a) where
                            bound]
          bound     = translateX (-labelSep/2)
                        (straight (pathFromVectors [(labelSep,0)]))
-         uplowdiff = size (upper - lower)
+         uplowdiff = ratio * size (upper - lower)
 
 ctext :: Double -> String -> Diagram
 ctext size string = translateY (-size/2) (text size string)

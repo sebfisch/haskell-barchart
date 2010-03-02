@@ -45,7 +45,7 @@ defaultConfig =
   Config { filename = "bar-chart.png",
            barColors = cycle (map SomeColor
             [midnightblue, firebrick, forestgreen]),
-           width = 400, height = 200, ratio = 1, padding = 10, captionSize = 12,
+           width = 600, height = 300, ratio = 1, padding = 10, captionSize = 12,
            labelSize = 8, labelSep = 5, barSep = 100, barWidth = 20 }
 
 render :: Measurable a => BarChart a -> IO ()

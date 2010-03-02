@@ -22,13 +22,11 @@ type Label = String
 data BarChart a = BarChart { caption, xlabel, ylabel :: Label,
                              bars :: [Bar a] }
 
-data Bars a = SingleBar (Bar a) | BarGroup [Bar a]
-
 data Bar a = Bar { label :: Label, values :: [Value a] }
 
 data Value a = Value a | Interval { mean, lower, upper :: a }
 
-class Measurable a where
+class Num a => Measurable a where
   size :: a -> Double
 
 instance Measurable Double where
@@ -51,20 +49,20 @@ data Config = Config { padding, ratio,
 defaultConfig :: Config
 defaultConfig =
   Config { padding = 10, ratio = 1, 
-           labelSize = 5, labelSep = 5,
+           labelSize = 10, labelSep = 5,
            barSep = 100, barWidth = 20 }
 
 class Drawable a where
   draw :: Config -> a -> Diagram
 
-instance (Show a, Measurable a) => Drawable (BarChart a) where
+instance Measurable a => Drawable (BarChart a) where
   draw config@Config{..} BarChart{..} =
     pad padding padding $
       vcatA hcenter
-        [text (2*labelSize) caption,
+        [text (1.5*labelSize) caption,
          hdistribA (barSep/2) left bottom
            [yaxis, hdistribA barSep left bottom (map (draw config) bars)]
-          // xaxis]
+         // xaxis]
    where
     width  = genericLength bars * (barSep + barWidth)
     height | null bars = 0
@@ -75,13 +73,25 @@ instance (Show a, Measurable a) => Drawable (BarChart a) where
     yaxis = vsep labelSep [text labelSize ylabel,
                            straight (pathFromVectors [(0,height)])]
 
-instance (Show a, Measurable a) => Drawable (Bar a) where
+instance Measurable a => Drawable (Bar a) where
   draw config@Config{..} Bar{..} =
     vcat (reverse (map (draw config) values))
 
-instance (Show a, Measurable a) => Drawable (Value a) where
+instance Measurable a => Drawable (Value a) where
   draw Config{..} (Value x) =
-    hsep labelSep [rect barWidth (ratio * size x), text labelSize (show x)]
+    hsep labelSep [rect barWidth (ratio * size x), ctext labelSize (show x)]
 
-  draw _ _ = error "no intervals yet"
+  draw Config{..} Interval{..} =
+    hsep labelSep [rect barWidth (ratio * size mean),
+                   deviation,
+                   ctext labelSize (show mean)]
+   where deviation = translateY (-uplowdiff/2) interval
+         interval  = vcat [bound,
+                           straight (pathFromVectors [(0,uplowdiff)]),
+                           bound]
+         bound     = translateX (-labelSep/2)
+                       (straight (pathFromVectors [(labelSep,0)]))
+         uplowdiff = size (upper - lower)
 
+ctext :: Double -> String -> Diagram
+ctext size string = translateY (-size/2) (text size string)

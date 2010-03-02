@@ -19,8 +19,7 @@ import Graphics.Rendering.Diagrams
 
 type Label = String
 
-data BarChart a = BarChart { caption, xlabel, ylabel :: Label,
-                             bars :: [Bar a] }
+data BarChart a = BarChart { caption, xlabel, ylabel :: Label, bars :: [Bar a] }
 
 data Bar a = Bar { label :: Label, values :: [Value a] }
 
@@ -35,23 +34,21 @@ instance Measurable Double where
 data Config = Config {
   filename :: FilePath,
   width, height :: Int,
-  padding, ratio, captionSize, labelSize, labelSep, barSep, barWidth :: Double
+  ratio, padding, captionSize, labelSize, labelSep, barSep, barWidth :: Double
  }
 
 defaultConfig :: Config
 defaultConfig =
   Config { filename = "bar-chart.png",
-           width = 400, height = 200,
-           padding = 10, ratio = 1, captionSize = 15,
-           labelSize = 10, labelSep = 5,
-           barSep = 100, barWidth = 20 }
+           width = 400, height = 200, ratio = 1, padding = 10, captionSize = 12,
+           labelSize = 8, labelSep = 5, barSep = 100, barWidth = 20 }
 
 render :: Measurable a => BarChart a -> IO ()
 render = renderWithConfig defaultConfig
 
 renderWithConfig :: Measurable a => Config -> BarChart a -> IO ()
 renderWithConfig config@Config{..} chart =
-  renderAs PNG filename (Width (fromIntegral width)) . diagram config
+  renderAs PNG filename (Width (fromIntegral width)) . diagram config $ chart
 
 diagram :: Measurable a => Config -> BarChart a -> Diagram
 diagram config@Config{..} chart = draw config{ ratio = hratio / wratio } chart
@@ -82,9 +79,12 @@ instance Measurable a => Drawable (BarChart a) where
     pad padding padding $
       vcatA hcenter
         [text captionSize caption,
-         hdistribA (barSep/2) left bottom
-           [yaxis, hdistribA barSep left bottom (map (draw config) bars)]
-         // xaxis]
+         vcat [hdistribA (barSep/2) left bottom
+                [yaxis, hdistribA barSep left bottom (map (draw config) bars)],
+              xaxis,
+              hdistribA (barSep/2) left bottom
+                [nil, hdistribA barSep left bottom
+                        (map (drawBarLabel config) bars)]]]
    where
     width  = barChartWidth config chart
     height = ratio * barChartHeight chart
@@ -93,6 +93,9 @@ instance Measurable a => Drawable (BarChart a) where
                                   text labelSize xlabel]
     yaxis = vsep labelSep [text labelSize ylabel,
                            straight (pathFromVectors [(0,height)])]
+
+drawBarLabel :: Config -> Bar a -> Diagram
+drawBarLabel Config{..} Bar{..} = text labelSize label
 
 instance Measurable a => Drawable (Bar a) where
   draw config@Config{..} Bar{..} =

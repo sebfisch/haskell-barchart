@@ -70,11 +70,17 @@ barChartHeight BarChart{..}
   | otherwise = maximum (map barSize bars)
 
 barSize :: Measurable a => Bar a -> Double
-barSize Bar{..} = sum (map valueSize blocks)
+barSize Bar{..} | null blocks = 0
+                | otherwise   = sum (upperSize b:map valueSize bs)
+ where (b:bs) = reverse blocks
 
 valueSize :: Measurable a => Block a -> Double
 valueSize (Value x)    = size x
 valueSize Interval{..} = size mean
+
+upperSize :: Measurable a => Block a -> Double
+upperSize (Value x)    = size x
+upperSize Interval{..} = size upper
 
 class Drawable a where
   draw :: Config -> a -> Diagram
@@ -109,10 +115,11 @@ instance Measurable a => Drawable (Bar a) where
 
 instance Drawable (SomeColor, Label) where
   draw Config{..} (color, string) =
-    hsep labelSep [block color labelSep labelSep, text labelSize string]
+    hsep labelSep [block color labelSize labelSize, text labelSize string]
 
 block :: SomeColor -> Double -> Double -> Diagram
-block color width height = lineColor white . fillColor color $ rect width height
+block color width height =
+  lineColor white . fillColor color $ roundRectF width height 0.1
 
 instance Measurable a => Drawable (SomeColor, Block a) where
   draw Config{..} (color, Value x) =
@@ -123,13 +130,13 @@ instance Measurable a => Drawable (SomeColor, Block a) where
     hsep labelSep [block color barWidth (ratio * size mean),
                    deviation,
                    ctext labelSize (show mean)]
-   where deviation = translateY (-uplowdiff/2) interval
+   where deviation = translateY (ratio * size (mean-upper)) interval
          interval  = vcat [bound,
-                           straight (pathFromVectors [(0,uplowdiff)]),
+                           straight (pathFromVectors
+                                      [(0,ratio * size (upper-lower))]),
                            bound]
          bound     = translateX (-labelSep/2)
                        (straight (pathFromVectors [(labelSep,0)]))
-         uplowdiff = ratio * size (upper - lower)
 
 ctext :: Double -> String -> Diagram
 ctext size string = translateY (-size/2) (text size string)

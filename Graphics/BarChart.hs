@@ -1,10 +1,10 @@
-{-# LANGUAGE NamedFieldPuns, RecordWildCards #-}
+{-# LANGUAGE NamedFieldPuns, RecordWildCards, FlexibleInstances #-}
 
 module Graphics.BarChart (
 
   -- ^ Bar chart datatypes
 
-  Label, BarChart(..), Bar(..), Value(..),
+  Label, BarChart(..), Bar(..), Block(..),
 
   -- ^ Rendering bar charts
 
@@ -16,14 +16,16 @@ import System.IO ( FilePath )
 import Data.List ( genericLength )
 
 import Graphics.Rendering.Diagrams
+import Graphics.Rendering.Diagrams.Types ( SomeColor(..) )
 
 type Label = String
 
-data BarChart a = BarChart { caption, xlabel, ylabel :: Label, bars :: [Bar a] }
+data BarChart a = BarChart { caption, xlabel, ylabel :: Label, 
+                             blockLabels :: [Label], bars :: [Bar a] }
 
-data Bar a = Bar { label :: Label, values :: [Value a] }
+data Bar a = Bar { label :: Label, blocks :: [Block a] }
 
-data Value a = Value a | Interval { mean, lower, upper :: a }
+data Block a = Value a | Interval { mean, lower, upper :: a }
 
 class Num a => Measurable a where
   size :: a -> Double
@@ -33,6 +35,7 @@ instance Measurable Double where
 
 data Config = Config {
   filename :: FilePath,
+  barColors :: [SomeColor],
   width, height :: Int,
   ratio, padding, captionSize, labelSize, labelSep, barSep, barWidth :: Double
  }
@@ -40,6 +43,8 @@ data Config = Config {
 defaultConfig :: Config
 defaultConfig =
   Config { filename = "bar-chart.png",
+           barColors = cycle (map SomeColor
+            [midnightblue, firebrick, forestgreen]),
            width = 400, height = 200, ratio = 1, padding = 10, captionSize = 12,
            labelSize = 8, labelSep = 5, barSep = 100, barWidth = 20 }
 
@@ -65,9 +70,9 @@ barChartHeight BarChart{..}
   | otherwise = maximum (map barSize bars)
 
 barSize :: Measurable a => Bar a -> Double
-barSize Bar{..} = sum (map valueSize values)
+barSize Bar{..} = sum (map valueSize blocks)
 
-valueSize :: Measurable a => Value a -> Double
+valueSize :: Measurable a => Block a -> Double
 valueSize (Value x)    = size x
 valueSize Interval{..} = size mean
 
@@ -77,8 +82,9 @@ class Drawable a where
 instance Measurable a => Drawable (BarChart a) where
   draw config@Config{..} chart@BarChart{..} =
     pad padding padding $
-      vcatA hcenter
+      vsepA labelSep hcenter
         [text captionSize caption,
+         hsep labelSep (map (draw config) (zip barColors blockLabels)),
          vcat [hdistribA (barSep/2) left bottom
                 [yaxis, hdistribA barSep left bottom (map (draw config) bars)],
               xaxis,
@@ -99,14 +105,22 @@ drawBarLabel Config{..} Bar{..} = text labelSize label
 
 instance Measurable a => Drawable (Bar a) where
   draw config@Config{..} Bar{..} =
-    vcat (reverse (map (draw config) values))
+    vcat (reverse (map (draw config) (zip barColors blocks)))
 
-instance Measurable a => Drawable (Value a) where
-  draw Config{..} (Value x) =
-    hsep labelSep [rect barWidth (ratio * size x), ctext labelSize (show x)]
+instance Drawable (SomeColor, Label) where
+  draw Config{..} (color, string) =
+    hsep labelSep [block color labelSep labelSep, text labelSize string]
 
-  draw Config{..} Interval{..} =
-    hsep labelSep [rect barWidth (ratio * size mean),
+block :: SomeColor -> Double -> Double -> Diagram
+block color width height = lineColor white . fillColor color $ rect width height
+
+instance Measurable a => Drawable (SomeColor, Block a) where
+  draw Config{..} (color, Value x) =
+      hsep labelSep [block color barWidth (ratio * size x),
+                     ctext labelSize (show x)]
+
+  draw Config{..} (color,Interval{..}) =
+    hsep labelSep [block color barWidth (ratio * size mean),
                    deviation,
                    ctext labelSize (show mean)]
    where deviation = translateY (-uplowdiff/2) interval

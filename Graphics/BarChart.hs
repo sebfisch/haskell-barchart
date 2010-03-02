@@ -8,7 +8,7 @@ module Graphics.BarChart (
 
   -- ^ Rendering bar charts
 
-  render, Config(..), defaultConfig, Drawable(..), Measurable(..),
+  Config(..), defaultConfig, render, diagram, Measurable(..),
 
   ) where
 
@@ -32,25 +32,29 @@ class Num a => Measurable a where
 instance Measurable Double where
   size = id
 
-data Config = Config { padding, ratio, captionSize,
-                       labelSize, labelSep,
-                       barSep, barWidth :: Double }
+data Config = Config {
+  filename :: FilePath,
+  width, height :: Int,
+  padding, ratio, captionSize, labelSize, labelSep, barSep, barWidth :: Double
+ }
 
 defaultConfig :: Config
 defaultConfig =
-  Config { padding = 10, ratio = 1, captionSize = 15,
+  Config { filename = "bar-chart.png",
+           width = 400, height = 200,
+           padding = 10, ratio = 1, captionSize = 15,
            labelSize = 10, labelSep = 5,
            barSep = 100, barWidth = 20 }
 
-render :: Measurable a => FilePath -> (Int,Int) -> BarChart a -> IO ()
+render :: Measurable a => BarChart a -> IO ()
 render = renderWithConfig defaultConfig
 
-renderWithConfig :: Measurable a
-                 => Config -> FilePath -> (Int,Int) -> BarChart a -> IO ()
-renderWithConfig config@Config{..} filename (width,height) chart
-  = renderAs PNG filename (Width (fromIntegral width))
-  . draw config{ ratio = hratio / wratio }
-  $ chart
+renderWithConfig :: Measurable a => Config -> BarChart a -> IO ()
+renderWithConfig config@Config{..} chart =
+  renderAs PNG filename (Width (fromIntegral width)) . diagram config
+
+diagram :: Measurable a => Config -> BarChart a -> Diagram
+diagram config@Config{..} chart = draw config{ ratio = hratio / wratio } chart
  where
   wratio = fromIntegral width / barChartWidth config chart
   hratio = fromIntegral height / barChartHeight chart

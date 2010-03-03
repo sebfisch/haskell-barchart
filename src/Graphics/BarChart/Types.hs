@@ -6,6 +6,8 @@ import System.IO ( FilePath )
 import Graphics.Rendering.Diagrams
 import Graphics.Rendering.Diagrams.Types ( SomeColor(..) )
 
+import Control.Arrow ( first )
+
 type Label = String
 
 data BarChart a = BarChart { caption, xlabel, ylabel :: Label, 
@@ -48,7 +50,7 @@ newtype RunTime = RunTime Double
  deriving (Eq,Num,Measurable)
 
 instance Read RunTime where
-  readsPrec n = map (\ (x,s) -> (RunTime x,s)) . readsPrec n
+  readsPrec n = map (first RunTime) . readsPrec n
 
 instance Show RunTime where
   show (RunTime t) | t >= hours   = display (t/hours)   "h"

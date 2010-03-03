@@ -5,7 +5,7 @@ module Graphics.BarChart.Parser where
 import Text.CSV
 
 import Data.List ( nub )
-import Data.Maybe ( fromJust )
+import Data.Maybe ( fromJust, fromMaybe )
 
 import System.FilePath
 
@@ -62,7 +62,7 @@ mergeIntervals xs =
   bar_labels   = map fst xs
   block_labels = nub (concatMap ((\ (Intervals ys) -> map fst ys) . snd) xs)
 
-  intervals l  = map (maybe (0,0,0) id . flip lookup ys) block_labels
+  intervals l  = map (fromMaybe (0,0,0) . flip lookup ys) block_labels
    where Intervals ys = fromJust (lookup l xs)
 
 multiBarChart :: Label -> CSV -> BarChart Double

@@ -71,7 +71,7 @@ drawBarChart config@Config{..} chart@BarChart{..} =
 
 drawDescr :: Config -> SomeColor -> Label -> Diagram
 drawDescr Config{..} color string =
-  hsep (font_size/2) [block color font_size font_size, text font_size string]
+  block color font_size font_size <> text font_size string
 
 block :: SomeColor -> Double -> Double -> Diagram
 block color width height =

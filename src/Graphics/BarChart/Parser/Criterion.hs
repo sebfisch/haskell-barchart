@@ -15,7 +15,10 @@ criterionChart name (_:csv) =
   intervalChart name (["benchmark","run time"] : map (take 4) csv)
 
 comparisonChart :: Label -> [(Label,CSV)] -> BarChart RunTime
-comparisonChart name = multiBarIntervalChart name "benchmarks" "run times"
+comparisonChart name
+  = chart name "benchmarks" "run times"
+  . mergeIntervals
+  . map (\ (label,_:csv) -> (label, parseIntervals $ map (take 4) csv))
 
 writeCriterionChart :: Config -> FilePath -> IO ()
 writeCriterionChart config file =

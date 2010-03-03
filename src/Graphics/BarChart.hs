@@ -6,7 +6,7 @@ module Graphics.BarChart (
 
   -- ^ Rendering bar charts
 
-  Config(..), conf, render, diagram, Measurable(..),
+  Config(..), conf, render, diagram, Measurable(..)
 
   ) where
 

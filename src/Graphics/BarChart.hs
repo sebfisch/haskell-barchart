@@ -11,5 +11,6 @@ module Graphics.BarChart (
   ) where
 
 import Graphics.BarChart.Types
-import Graphics.BarChart.Parser
 import Graphics.BarChart.Rendering
+import Graphics.BarChart.Parser
+import Graphics.BarChart.Parser.Criterion

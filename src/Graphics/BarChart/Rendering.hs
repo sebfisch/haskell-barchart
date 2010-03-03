@@ -14,7 +14,7 @@ render = renderWith conf
 
 renderWith :: Measurable a => Config -> BarChart a -> IO ()
 renderWith config@Config{..} chart =
-  renderAs PNG filename (Width (fromIntegral width)) . diagram config $ chart
+  renderAs PNG file_name (Width (fromIntegral width)) . diagram config $ chart
  where (width,_) = chart_size
 
 diagram :: Measurable a => Config -> BarChart a -> Diagram
@@ -56,21 +56,22 @@ drawBarChart config@Config{..} chart@BarChart{..} =
   title   = text (1.5*font_size) caption
   legend  = hcat (zipWith (drawDescr config) bar_colors block_labels)
 
-  body    = vsepA font_size hcenter
-              [vcat [yBars, xaxis, xlabels], text font_size xlabel]
+  body    = vcat [yBars, xaxis, xlabels]
 
   yBars   = hdistribA (bar_sep/2) left bottom [yaxis, cols]
   yaxis   = vsep (font_size/2)
-              [text font_size ylabel, straight (pathFromVectors [(0,height)])]
-  cols    = sideBySide (map (drawBar config) bars)
+              [text font_size ylabel,
+               straight (pathFromVectors [(0,height)])]
+  cols    = sideBySide left (map (drawBar config) bars)
 
-  xaxis   = straight (pathFromVectors [(width,0)]) <> hspace 0.5
+  xaxis   = hsep (font_size/2)
+              [straight (pathFromVectors [(width,0)]), text font_size xlabel]
   xlabels = vspace (font_size/2)
-         // hspace (bar_sep/2) <> sideBySide (map (drawBarLabel config) bars)
+         // sideBySide vcenter (map (drawBarLabel config) bars)
 
 drawDescr :: Config -> SomeColor -> Label -> Diagram
-drawDescr Config{..} color string = block color font_size font_size
-                                 // text font_size string
+drawDescr Config{..} color string =
+  hsep (font_size/2) [block color font_size font_size, text font_size string]
 
 block :: SomeColor -> Double -> Double -> Diagram
 block color width height =
@@ -103,5 +104,5 @@ ctext size string = translateY (-size/2) $ text size string
 drawBarLabel :: Config -> Bar a -> Diagram
 drawBarLabel Config{..} Bar{..} = text font_size label
 
-sideBySide [] = nil
-sideBySide ds = hdistribA 1 left bottom (init ds) <> last ds
+sideBySide valign ds = hdistribA 1 valign bottom ds
+ where ds' = map showBBox ds

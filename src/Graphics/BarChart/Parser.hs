@@ -7,7 +7,10 @@ import Text.CSV
 import Data.List ( nub )
 import Data.Maybe ( fromJust )
 
+import System.FilePath
+
 import Graphics.BarChart.Types
+import Graphics.BarChart.Rendering
 
 newtype MultiBars a = MultiBars [(Label,[a])]
 
@@ -46,11 +49,11 @@ instance Drawable (MultiBarIntervals a)
 
 parseMultiBars :: Read a => CSV -> MultiBars a
 parseMultiBars = MultiBars . map parseRecord
- where parseRecord (label:values) = (read label,map read values)
+ where parseRecord (label:values) = (label,map read values)
 
 parseIntervals :: Read a => CSV -> Intervals a
 parseIntervals = Intervals . map parseRecord
- where parseRecord [label,m,l,u] = (read label,(read m, read l, read u))
+ where parseRecord [label,m,l,u] = (label,(read m, read l, read u))
 
 mergeIntervals :: Num a => [(Label,Intervals a)] -> MultiBarIntervals a
 mergeIntervals xs =
@@ -61,3 +64,15 @@ mergeIntervals xs =
 
   intervals l  = map (maybe (0,0,0) id . flip lookup ys) block_labels
    where Intervals ys = fromJust (lookup l xs)
+
+multiBarChart :: Label -> CSV -> BarChart Double
+multiBarChart name ((xlabel:ylabel:_):csv) =
+  chart name xlabel ylabel . parseMultiBars $ csv
+
+writeMultiBarChart :: Config -> FilePath -> IO ()
+writeMultiBarChart config file =
+  renderWith config . multiBarChart (dropExtension file) =<< readCSV file
+
+readCSV :: FilePath -> IO CSV
+readCSV file = either (fail . show) (return . clean) =<< parseCSVFromFile file
+ where clean = filter (not . all null)

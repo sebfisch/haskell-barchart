@@ -12,13 +12,10 @@ import Graphics.BarChart.Rendering
 
 criterionChart :: Label -> CSV -> BarChart RunTime
 criterionChart name (_:csv) =
-  chart name "benchmark" "run time" . parseIntervals $ map (take 4) csv
+  intervalChart name (["benchmark","run time"] : map (take 4) csv)
 
 comparisonChart :: Label -> [(Label,CSV)] -> BarChart RunTime
-comparisonChart name
-  = chart name "benchmarks" "run times"
-  . mergeIntervals
-  . map (\ (label,_:csv) -> (label, parseIntervals $ map (take 4) csv))
+comparisonChart name = multiBarIntervalChart name "benchmarks" "run times"
 
 writeCriterionChart :: Config -> FilePath -> IO ()
 writeCriterionChart config file =

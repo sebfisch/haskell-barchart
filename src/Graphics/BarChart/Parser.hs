@@ -69,9 +69,26 @@ multiBarChart :: Label -> CSV -> BarChart Double
 multiBarChart name ((xlabel:ylabel:_):csv) =
   chart name xlabel ylabel . parseMultiBars $ csv
 
+intervalChart :: (Measurable a, Read a) => Label -> CSV -> BarChart a
+intervalChart name ((xlabel:ylabel:_):csv) =
+  chart name xlabel ylabel . parseIntervals $ csv
+
+multiBarIntervalChart :: (Measurable a, Read a)
+                      => Label -> Label -> Label -> [(Label,CSV)] -> BarChart a
+multiBarIntervalChart name xlabel ylabel
+  = chart name xlabel ylabel
+  . mergeIntervals
+  . map (\ (label,_:csv) -> (label, parseIntervals $ map (take 4) csv))
+
 writeMultiBarChart :: Config -> FilePath -> IO ()
 writeMultiBarChart config file =
   renderWith config . multiBarChart (dropExtension file) =<< readCSV file
+
+writeIntervalChart :: Config -> FilePath -> Label -> IO ()
+writeIntervalChart config file name =
+  do csv <- readCSV file
+     let chart = intervalChart name csv :: BarChart Double
+     renderWith config chart
 
 readCSV :: FilePath -> IO CSV
 readCSV file = either (fail . show) (return . clean) =<< parseCSVFromFile file

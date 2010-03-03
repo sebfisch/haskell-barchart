@@ -10,15 +10,17 @@ import Graphics.BarChart.Types
 import Graphics.BarChart.Parser
 import Graphics.BarChart.Rendering
 
-progressionChart :: Label -> CSV -> BarChart Ratio
-progressionChart name csv
-  = chart name "benchmarks" "run time ratios"
+progressionChart :: [Label] -> CSV -> BarChart Ratio
+progressionChart labels csv
+  = chart
   . flipMultiBarIntervals
-  . parseMultiBarIntervals (replicate (length csv) "")
+  . parseMultiBarIntervals block_labels
   $ csv
+ where block_labels | null labels = replicate (length csv) ""
+                    | otherwise   = labels
 
-writeProgressionChart :: Config -> FilePath -> IO ()
-writeProgressionChart config@Config{..} file =
+writeProgressionChart :: Config -> FilePath -> [Label] -> IO ()
+writeProgressionChart config@Config{..} file block_labels =
   do csv <- readCSV file
-     let chart = progressionChart (dropExtension file_name) csv
+     let chart = progressionChart block_labels csv
      renderWith config chart

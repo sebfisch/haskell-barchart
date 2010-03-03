@@ -10,8 +10,8 @@ import System.FilePath
 import Graphics.BarChart.Types
 import Graphics.BarChart.Rendering
 
-parseMultiBars :: Read a => CSV -> MultiBars a
-parseMultiBars = MultiBars . map parseRecord
+parseMultiBars :: Read a => [Label] -> CSV -> MultiBars a
+parseMultiBars block_labels = MultiBars block_labels . map parseRecord
  where parseRecord (label:values) = (label,map read values)
 
 parseIntervals :: Read a => CSV -> Intervals a
@@ -19,7 +19,8 @@ parseIntervals = Intervals . map parseRecord
  where parseRecord [label,m,l,u] = (label,(read m, read l, read u))
 
 parseMultiBarIntervals :: Read a => [Label] -> CSV -> MultiBarIntervals a
-parseMultiBarIntervals block_labels = MBIntervals block_labels . map parseRecord
+parseMultiBarIntervals block_labels =
+  MBIntervals block_labels . map parseRecord
  where parseRecord (label:fields) = (label, triples fields)
        triples (x:y:z:xs) = (read x,read y,read z) : triples xs
        triples _          = []
@@ -34,33 +35,32 @@ mergeIntervals xs =
   intervals l  = map (fromMaybe (0,0,0) . flip lookup ys) block_labels
    where Intervals ys = fromJust (lookup l xs)
 
-multiBarChart :: Label -> CSV -> BarChart Double
-multiBarChart name ((xlabel:ylabel:_):csv) =
-  chart name xlabel ylabel . parseMultiBars $ csv
+multiBarChart :: (Measurable a, Read a) => [Label] -> CSV -> BarChart a
+multiBarChart block_labels = chart . parseMultiBars block_labels
 
-intervalChart :: (Measurable a, Read a) => Label -> CSV -> BarChart a
-intervalChart name ((xlabel:ylabel:_):csv) =
-  chart name xlabel ylabel . parseIntervals $ csv
+intervalChart :: (Measurable a, Read a) => CSV -> BarChart a
+intervalChart = chart . parseIntervals
 
-multiBarIntervalChart :: (Measurable a, Read a)
-                      => Label -> [Label] -> CSV -> BarChart a
-multiBarIntervalChart name block_labels ((xlabel:ylabel:_):csv) =
-  chart name xlabel ylabel . parseMultiBarIntervals block_labels $ csv
+multiBarIntervalChart :: (Measurable a, Read a) => [Label] -> CSV -> BarChart a
+multiBarIntervalChart block_labels =
+  chart . parseMultiBarIntervals block_labels
 
-writeMultiBarChart :: Config -> FilePath -> IO ()
-writeMultiBarChart config file =
-  renderWith config . multiBarChart (dropExtension file) =<< readCSV file
-
-writeIntervalChart :: Config -> FilePath -> Label -> IO ()
-writeIntervalChart config file name =
+writeMultiBarChart :: Config -> FilePath -> [Label] -> IO ()
+writeMultiBarChart config file block_labels =
   do csv <- readCSV file
-     let chart = intervalChart name csv :: BarChart Double
+     let chart = multiBarChart block_labels csv :: BarChart Double
      renderWith config chart
 
-writeMultiBarIntervalChart :: Config -> FilePath -> Label -> [Label] -> IO ()
-writeMultiBarIntervalChart config file name block_labels =
+writeIntervalChart :: Config -> FilePath -> IO ()
+writeIntervalChart config file =
   do csv <- readCSV file
-     let chart = multiBarIntervalChart name block_labels csv :: BarChart Double
+     let chart = intervalChart csv :: BarChart Double
+     renderWith config chart
+
+writeMultiBarIntervalChart :: Config -> FilePath -> [Label] -> IO ()
+writeMultiBarIntervalChart config file block_labels =
+  do csv <- readCSV file
+     let chart = multiBarIntervalChart block_labels csv :: BarChart Double
      renderWith config chart
 
 readCSV :: FilePath -> IO CSV

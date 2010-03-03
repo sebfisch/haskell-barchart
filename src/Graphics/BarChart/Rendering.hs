@@ -14,8 +14,7 @@ render = renderWith conf
 
 renderWith :: Measurable a => Config -> BarChart a -> IO ()
 renderWith config@Config{..} chart =
-  renderAs PNG file_name (Width (fromIntegral width)) . diagram config $ chart
- where (width,_) = chart_size
+  renderAs PNG out_file (Width (fromIntegral width)) . diagram config $ chart
 
 diagram :: Measurable a => Config -> BarChart a -> Diagram
 diagram config@Config{..} chart@BarChart{..} =
@@ -23,7 +22,6 @@ diagram config@Config{..} chart@BarChart{..} =
                        font_size = font_size / wratio }
                chart
  where
-  (width,height) = chart_size
   wratio = fromIntegral width / genericLength bars
   hratio = fromIntegral height / barChartHeight chart
 
@@ -54,7 +52,7 @@ drawBarChart config@Config{..} chart@BarChart{..} =
 
   header  = vsepA font_size hcenter [title,legend]
   title   = text (1.5*font_size) caption
-  legend  = hcat (zipWith (drawDescr config) bar_colors block_labels)
+  legend  = hcat (zipWith (drawDescr config) (roll bar_colors) block_labels)
 
   body    = vcat [yBars, xaxis, xlabels]
 
@@ -69,6 +67,11 @@ drawBarChart config@Config{..} chart@BarChart{..} =
   xlabels = vspace (font_size/2)
          // sideBySide vcenter (map (drawBarLabel config) bars)
 
+roll :: String -> [SomeColor]
+roll colorNames | null colors = [readColor "black"]
+                | otherwise   = map readColor colors
+ where colors = words colorNames
+
 drawDescr :: Config -> SomeColor -> Label -> Diagram
 drawDescr Config{..} color string =
   block color font_size font_size <> text font_size string
@@ -79,7 +82,7 @@ block color width height =
 
 drawBar :: Measurable a => Config -> Bar a -> Diagram
 drawBar config@Config{..} Bar{..} =
-  vcat . reverse $ zipWith (drawBlock config) bar_colors blocks
+  vcat . reverse $ zipWith (drawBlock config) (roll bar_colors) blocks
 
 drawBlock :: Measurable a => Config -> SomeColor -> Block a -> Diagram
 

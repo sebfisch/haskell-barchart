@@ -1,5 +1,5 @@
-{-# LANGUAGE TypeFamilies, GeneralizedNewtypeDeriving, FlexibleContexts, 
-             NamedFieldPuns, RecordWildCards #-}
+{-# LANGUAGE TypeFamilies, FlexibleContexts, NamedFieldPuns, RecordWildCards,
+             GeneralizedNewtypeDeriving, DeriveDataTypeable #-}
 
 module Graphics.BarChart.Types where
 
@@ -7,16 +7,14 @@ import System.IO ( FilePath )
 import Graphics.Rendering.Diagrams
 import Graphics.Rendering.Diagrams.Types ( SomeColor(..) )
 
+import Data.Data     ( Data, Typeable )
 import Data.List     ( transpose )
+import Data.Maybe    ( fromMaybe )
 import Control.Arrow ( first )
-
-instance Read SomeColor where
-  readsPrec _ s = maybe [] (\c -> [(SomeColor c,"")]) (readColourName s)
 
 type Label = String
 
-data BarChart a = BarChart { caption, xlabel, ylabel :: Label, 
-                             block_labels :: [Label], bars :: [Bar a] }
+data BarChart a = BarChart { block_labels :: [Label], bars :: [Bar a] }
 
 data Bar a = Bar { label :: Label, blocks :: [Block a] }
 
@@ -26,8 +24,7 @@ class Drawable a
  where
   type Value a
 
-  chart :: Measurable (Value a)
-        => Label -> Label -> Label -> a -> BarChart (Value a) 
+  chart :: Measurable (Value a) => a -> BarChart (Value a) 
 
 class Num a => Measurable a where
   size :: a -> Double
@@ -37,19 +34,35 @@ instance Measurable Float   where size = realToFrac
 instance Measurable Integer where size = fromIntegral
 instance Measurable Int     where size = fromIntegral
 
+type ColorName = String
+
+readColor :: ColorName -> SomeColor
+readColor color = SomeColor . fromMaybe (error $ "ivalid color: " ++ color) $
+                    readColourName color
+
+data ExecMode = Default | IntervalBars | MultiIntervalBars
+              | Criterion | Progression
+ deriving (Eq,Show,Data,Typeable)
+
 data Config = Config {
-  file_name  :: FilePath,
-  bar_colors :: [SomeColor],
-  chart_size :: (Int,Int),
-  ratio, font_size, bar_ratio :: Double
- }
+  exec_mode :: ExecMode,
+  out_file :: FilePath,
+  caption, xlabel, ylabel :: Label,
+  legend, bar_colors :: String,
+  width, height :: Int,
+  ratio, font_size, bar_ratio :: Double,
+  in_files :: [String] }
+ deriving (Show,Data,Typeable)
 
 conf :: Config
-conf = Config { file_name  = "bar-chart.png",
-                bar_colors = cycle (map SomeColor
-                                    [forestgreen, firebrick, midnightblue]),
-                chart_size = (800,400),
-                ratio = 1, font_size = 12, bar_ratio = 0.3 }
+conf = Config { exec_mode = Default,
+                out_file = "bar-chart.png",
+                caption = "Bar Chart", xlabel = "x axis", ylabel = "y axis",
+                legend = "",
+                bar_colors = "forestgreen firebrick midnightblue",
+                width = 800, height = 400,
+                ratio = 1, font_size = 12, bar_ratio = 0.3,
+                in_files = [] }
 
 newtype RunTime = RunTime Double
  deriving (Eq,Num,Measurable)
@@ -85,15 +98,14 @@ instance Read Ratio where
 instance Show Ratio where
   show (Ratio r) = display (100*r) ++ " %"
 
-newtype MultiBars a = MultiBars [(Label,[a])]
+data MultiBars a = MultiBars [Label] [(Label,[a])]
 
 instance Drawable (MultiBars a)
  where
   type Value (MultiBars a) = a
 
-  chart caption xlabel ylabel (MultiBars pairs) = BarChart{..}
-   where block_labels       = []
-         bars               = map (uncurry mkBar) pairs
+  chart (MultiBars block_labels pairs) = BarChart{..}
+   where bars               = map (uncurry mkBar) pairs
          mkBar label values = Bar{..} where blocks = map Value values
 
 newtype Intervals a = Intervals [(Label,(a,a,a))]
@@ -102,7 +114,7 @@ instance Drawable (Intervals a)
  where
   type Value (Intervals a) = a
 
-  chart caption xlabel ylabel (Intervals pairs) = BarChart{..}
+  chart (Intervals pairs) = BarChart{..}
    where block_labels                   = []
          bars                           = map (uncurry mkBar) pairs
          mkBar label (mean,lower,upper) = Bar{..} where blocks = [Interval{..}]
@@ -120,7 +132,7 @@ instance Drawable (MultiBarIntervals a)
  where
   type Value (MultiBarIntervals a) = a
 
-  chart caption xlabel ylabel (MBIntervals block_labels pairs) = BarChart{..}
+  chart (MBIntervals block_labels pairs) = BarChart{..}
    where bars = map (uncurry mkBar) pairs
 
          mkBar label ints = Bar{..}

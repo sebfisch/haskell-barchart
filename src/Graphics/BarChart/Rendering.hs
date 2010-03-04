@@ -14,14 +14,19 @@ render = renderWith conf
 
 renderWith :: Measurable a => Config -> BarChart a -> IO ()
 renderWith config@Config{..} chart =
-  renderAs PNG out_file (Width (fromIntegral width)) . diagram config $ chart
+  do renderAs outputType outFile (Width (fromIntegral width))
+       . diagram config
+       $ chart
+     putStrLn $ "Chart written in file " ++ outFile
+ where (width,_) = dimensions
 
 diagram :: Measurable a => Config -> BarChart a -> Diagram
 diagram config@Config{..} chart@BarChart{..} =
   drawBarChart config{ ratio     = hratio / wratio,
-                       font_size = font_size / wratio }
+                       fontSize = fontSize / wratio }
                chart
  where
+  (width,height) = dimensions
   wratio = fromIntegral width / genericLength bars
   hratio = fromIntegral height / barChartHeight chart
 
@@ -44,37 +49,36 @@ upperSize Interval{..} = size upper
 
 drawBarChart :: Measurable a => Config -> BarChart a -> Diagram
 drawBarChart config@Config{..} chart@BarChart{..} =
-  pad font_size font_size $ vsepA font_size hcenter [header,body]
+  pad fontSize fontSize $ vsepA fontSize hcenter [header,body]
  where
   width   = genericLength bars
   height  = ratio * barChartHeight chart
-  bar_sep = 1 - bar_ratio
+  bar_sep = 1 - barRatio
 
-  header  = vsepA font_size hcenter [title,legend]
-  title   = text (1.5*font_size) caption
-  legend  = hcat (zipWith (drawDescr config) (roll bar_colors) block_labels)
+  header  = vsepA fontSize hcenter [title,legend]
+  title   = text (1.5*fontSize) caption
+  legend  = hcat (zipWith (drawDescr config) (roll barColors) block_labels)
 
-  body    = vcat [yBars, xaxis, xlabels]
+  body    = vcat [yBars, xaxis, xLabels]
 
   yBars   = hdistribA (bar_sep/2) left bottom [yaxis, cols]
-  yaxis   = vsep (font_size/2)
-              [text font_size ylabel,
+  yaxis   = vsep (fontSize/2)
+              [text fontSize yLabel,
                straight (pathFromVectors [(0,height)])]
   cols    = sideBySide left (map (drawBar config) bars)
 
-  xaxis   = hsep (font_size/2)
-              [straight (pathFromVectors [(width,0)]), text font_size xlabel]
-  xlabels = vspace (font_size/2)
+  xaxis   = hsep (fontSize/2)
+              [straight (pathFromVectors [(width,0)]), text fontSize xLabel]
+  xLabels = vspace (fontSize/2)
          // sideBySide vcenter (map (drawBarLabel config) bars)
 
-roll :: String -> [SomeColor]
-roll colorNames | null colors = [readColor "black"]
-                | otherwise   = map readColor colors
- where colors = words colorNames
-
+roll :: [SomeColor] -> [SomeColor]
+roll colors | null colors = cycle [readColor "black"]
+            | otherwise   = cycle colors
+                                
 drawDescr :: Config -> SomeColor -> Label -> Diagram
 drawDescr Config{..} color string =
-  block color font_size font_size <> text font_size string
+  block color fontSize fontSize <> text fontSize string
 
 block :: SomeColor -> Double -> Double -> Diagram
 block color width height =
@@ -82,30 +86,30 @@ block color width height =
 
 drawBar :: Measurable a => Config -> Bar a -> Diagram
 drawBar config@Config{..} Bar{..} =
-  vcat . reverse $ zipWith (drawBlock config) (roll bar_colors) blocks
+  vcat . reverse $ zipWith (drawBlock config) (roll barColors) blocks
 
 drawBlock :: Measurable a => Config -> SomeColor -> Block a -> Diagram
 
 drawBlock Config{..} color (Value x) = hcat [bar, label]
  where
-  bar   = block color bar_ratio (ratio * size x)
-  label = translateX (font_size/2) . ctext font_size $ show x
+  bar   = block color barRatio (ratio * size x)
+  label = translateX (fontSize/2) . ctext fontSize $ show x
 
 drawBlock Config{..} color Interval{..} = hcat [bar, deviation, label]
  where
-  bar       = block color bar_ratio (ratio * size mean)
+  bar       = block color barRatio (ratio * size mean)
   deviation = translateY (ratio * size (mean-upper)) interval
   interval  = vcat [bound,line,bound]
-  bound     = translateX (-font_size/2) . straight $
-                pathFromVectors [(font_size,0)]
+  bound     = translateX (-fontSize/2) . straight $
+                pathFromVectors [(fontSize,0)]
   line      = straight $ pathFromVectors [(0,ratio * size (upper-lower))]
-  label     = translateX (-font_size/2) . ctext font_size $ show mean
+  label     = translateX (-fontSize/2) . ctext fontSize $ show mean
 
 ctext :: Double -> String -> Diagram
 ctext size string = translateY (-size/2) $ text size string
 
 drawBarLabel :: Config -> Bar a -> Diagram
-drawBarLabel Config{..} Bar{..} = text font_size label
+drawBarLabel Config{..} Bar{..} = text fontSize label
 
 sideBySide valign ds = hdistribA 1 valign bottom ds
  where ds' = map showBBox ds

@@ -13,9 +13,10 @@ import Graphics.BarChart.Rendering
 criterionChart :: CSV -> BarChart RunTime
 criterionChart (_:csv) = intervalChart $ map (take 4) csv
 
-comparisonChart :: [(Label,CSV)] -> BarChart RunTime
-comparisonChart
+comparisonChart :: Bool -> [(Label,CSV)] -> BarChart RunTime
+comparisonChart flip
   = chart
+  . (if flip then flipMultiBarIntervals else id)
   . mergeIntervals
   . map (\ (label,_:csv) -> (label, parseIntervals $ map (take 4) csv))
 
@@ -23,7 +24,8 @@ writeCriterionChart :: Config -> FilePath -> IO ()
 writeCriterionChart config file =
   renderWith config . criterionChart =<< readCSV file
 
-writeComparisonChart :: Config -> [FilePath] -> IO ()
-writeComparisonChart config@Config{..} files =
+writeComparisonChart :: Bool -> Config -> [FilePath] -> IO ()
+writeComparisonChart flip config@Config{..} files =
   do csvs <- mapM readCSV files
-     renderWith config . comparisonChart $ zip (map dropExtension files) csvs
+     renderWith config . comparisonChart flip $
+       zip (map dropExtension files) csvs

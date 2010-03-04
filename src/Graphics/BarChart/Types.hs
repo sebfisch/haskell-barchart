@@ -1,5 +1,5 @@
 {-# LANGUAGE TypeFamilies, FlexibleContexts, NamedFieldPuns, RecordWildCards,
-             GeneralizedNewtypeDeriving, DeriveDataTypeable #-}
+             GeneralizedNewtypeDeriving #-}
 
 module Graphics.BarChart.Types where
 
@@ -40,29 +40,20 @@ readColor :: ColorName -> SomeColor
 readColor color = SomeColor . fromMaybe (error $ "ivalid color: " ++ color) $
                     readColourName color
 
-data ExecMode = Default | IntervalBars | MultiIntervalBars
-              | Criterion | Progression
- deriving (Eq,Show,Data,Typeable)
-
 data Config = Config {
-  exec_mode :: ExecMode,
-  out_file :: FilePath,
-  caption, xlabel, ylabel :: Label,
-  legend, bar_colors :: String,
-  width, height :: Int,
-  ratio, font_size, bar_ratio :: Double,
-  in_files :: [String] }
- deriving (Show,Data,Typeable)
+  outFile :: FilePath,
+  outputType :: OutputType,
+  caption, xLabel, yLabel :: Label,
+  barColors :: [SomeColor],
+  dimensions :: (Int,Int),
+  ratio, fontSize, barRatio :: Double }
 
 conf :: Config
-conf = Config { exec_mode = Default,
-                out_file = "bar-chart.png",
-                caption = "Bar Chart", xlabel = "x axis", ylabel = "y axis",
-                legend = "",
-                bar_colors = "forestgreen firebrick midnightblue",
-                width = 800, height = 400,
-                ratio = 1, font_size = 12, bar_ratio = 0.3,
-                in_files = [] }
+conf = Config { outFile = "", outputType = PNG,
+                caption = "", xLabel = "", yLabel = "",
+                barColors = map SomeColor [forestgreen,firebrick,midnightblue],
+                dimensions = (800,400),
+                ratio = 1, fontSize = 12, barRatio = 0.3 }
 
 newtype RunTime = RunTime Double
  deriving (Eq,Num,Measurable)

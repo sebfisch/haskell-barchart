@@ -8,3 +8,4 @@ Executable bar-chart
   Hs-Source-Dirs:       src
   Build-Depends:        base >= 3 && < 5, filepath == 1.1.*,
                         cmdargs == 0.1.*, csv == 0.1.*, diagrams == 0.2.*
+  Extensions:           NamedFieldPuns, RecordWildCards, DeriveDataTypeable

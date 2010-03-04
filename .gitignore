@@ -1,5 +1,8 @@
 *~
 .DS_Store
-*.png
 *.csv
+*.png
+*.svg
+*.pdf
+*.ps
 dist/*

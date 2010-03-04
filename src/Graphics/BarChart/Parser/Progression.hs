@@ -10,17 +10,17 @@ import Graphics.BarChart.Types
 import Graphics.BarChart.Parser
 import Graphics.BarChart.Rendering
 
-progressionChart :: [Label] -> CSV -> BarChart Ratio
-progressionChart labels csv
+progressionChart :: Bool -> [Label] -> CSV -> BarChart Ratio
+progressionChart flip labels csv
   = chart
-  . flipMultiBarIntervals
+  . (if flip then flipMultiBarIntervals else id)
   . parseMultiBarIntervals block_labels
   $ csv
  where block_labels | null labels = replicate (length csv) ""
                     | otherwise   = labels
 
-writeProgressionChart :: Config -> FilePath -> [Label] -> IO ()
-writeProgressionChart config@Config{..} file block_labels =
+writeProgressionChart :: Bool -> Config -> FilePath -> [Label] -> IO ()
+writeProgressionChart flip config@Config{..} file block_labels =
   do csv <- readCSV file
-     let chart = progressionChart block_labels csv
+     let chart = progressionChart flip block_labels csv
      renderWith config chart

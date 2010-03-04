@@ -191,9 +191,11 @@ criterionMode =
                   [Summary
                     &= text "Show benchmark summary (default)",
                    Summary_Comparison
-                    &= text "Compare different benchmark summaries",
+                    &= text "Compare different benchmark summaries"
+                    &  flag "s",
                    Benchmark_Comparison
-                    &= text "Compare different benchmarks"] }
+                    &= text "Compare different benchmarks"
+                    &  flag "b"] }
  where (width,height) = dimensions conf
 
 progressionMode =
@@ -236,9 +238,11 @@ progressionMode =
                     &  args,
     breakdown  = Summary_Comparison `enum`
                   [Summary_Comparison
-                    &= text "Breakdown chart by benchmark summary (default)",
+                    &= text "Breakdown chart by benchmark summary (default)"
+                    & flag "s",
                    Benchmark_Comparison
-                    &= text "Breakdown chart by benchmarks"] }
+                    &= text "Breakdown chart by benchmarks"
+                    &  flag "b"] }
  where (width,height) = dimensions conf
 
 typString  = typ "STRING"

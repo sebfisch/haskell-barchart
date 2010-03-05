@@ -90,20 +90,23 @@ drawBar config@Config{..} Bar{..} =
 
 drawBlock :: Measurable a => Config -> SomeColor -> Block a -> Diagram
 
-drawBlock Config{..} color (Value x) = hcat [bar, label]
+drawBlock Config{..} color (Value x) = hcatA bottom [bar, label]
  where
   bar   = block color barRatio (ratio * size x)
   label = translateX (fontSize/2) . ctext fontSize $ show x
 
-drawBlock Config{..} color Interval{..} = hcat [bar, deviation, label]
+drawBlock Config{..} color Interval{..} = hcatA bottom [bar, deviation, label]
  where
   bar       = block color barRatio (ratio * size mean)
-  deviation = translateY (ratio * size (mean-upper)) interval
+  deviation = translateY (-ratio * size lower) interval
   interval  = vcat [bound,line,bound]
   bound     = translateX (-fontSize/2) . straight $
                 pathFromVectors [(fontSize,0)]
   line      = straight $ pathFromVectors [(0,ratio * size (upper-lower))]
-  label     = translateX (-fontSize/2) . ctext fontSize $ show mean
+  label     = translateX (-fontSize/2)
+            . translateY (fontSize - ratio * size mean)
+            . ctext fontSize
+            $ show mean
 
 ctext :: Double -> String -> Diagram
 ctext size string = translateY (-size/2) $ text size string
@@ -112,4 +115,3 @@ drawBarLabel :: Config -> Bar a -> Diagram
 drawBarLabel Config{..} Bar{..} = text fontSize label
 
 sideBySide valign ds = hdistribA 1 valign bottom ds
- where ds' = map showBBox ds

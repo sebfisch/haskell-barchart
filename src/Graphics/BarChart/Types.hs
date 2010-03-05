@@ -15,10 +15,13 @@ import Control.Arrow ( first )
 type Label = String
 
 data BarChart a = BarChart { block_labels :: [Label], bars :: [Bar a] }
+ deriving Show
 
 data Bar a = Bar { label :: Label, blocks :: [Block a] }
+ deriving Show
 
 data Block a = Value a | Interval { mean, lower, upper :: a }
+ deriving Show
 
 class Drawable a
  where
@@ -90,6 +93,7 @@ instance Show Ratio where
   show (Ratio r) = display (100*r) ++ " %"
 
 data MultiBars a = MultiBars [Label] [(Label,[a])]
+ deriving Show
 
 instance Drawable (MultiBars a)
  where
@@ -100,6 +104,7 @@ instance Drawable (MultiBars a)
          mkBar label values = Bar{..} where blocks = map Value values
 
 newtype Intervals a = Intervals [(Label,(a,a,a))]
+ deriving Show
 
 instance Drawable (Intervals a)
  where
@@ -111,6 +116,7 @@ instance Drawable (Intervals a)
          mkBar label (mean,lower,upper) = Bar{..} where blocks = [Interval{..}]
 
 data MultiBarIntervals a = MBIntervals [Label] [(Label,[(a,a,a)])]
+ deriving Show
 
 flipMultiBarIntervals :: MultiBarIntervals a -> MultiBarIntervals a
 flipMultiBarIntervals (MBIntervals old_block_labels old_bars) =

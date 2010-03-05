@@ -5,11 +5,11 @@ by the Haskell benchmarking tools [criterion] and
 the Haskell [Diagrams] library for rendering and, hence, depends on a
 Haskell binding to Cairo which is part of [Gtk2Hs].
 
-# install
+# installation
 
 available soon. be patient.
 
-# use
+# usage
 
 Bar charts can be created from CSV files using the `barchart`
 command-line utility. For example, if you want to track how many hours
@@ -59,7 +59,7 @@ produces the following bar chart:
 
 ![Mean practice hours][guitar-mean]
 
-In this chart, each bars represents the mean practice hour for a day
+In this chart, each bar represents the mean practice hour for a day
 of the week and the minimum and maximum values are depicted with
 intervals on the right edge of a bar.
 
@@ -286,7 +286,7 @@ diagram is of questionable use.
 
 ![progression-benchmarks]
 
-# contribute
+# collaboration
 
 The source code is on [GitHub] so you can create or vote on [issues]
 to ask for extensions or fork this project to write extensions

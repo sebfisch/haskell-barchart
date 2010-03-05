@@ -1,4 +1,6 @@
 *~
+*.hi
+*.o
 .DS_Store
 *.csv
 *.png

@@ -5,7 +5,7 @@ body {
 
 #TOC>ul {
     margin: 0; padding: 0;
-    text-align: right;
+    text-align: right; float: right;
 }
 
 #TOC>ul>li {
@@ -42,4 +42,9 @@ pre code {
 img {
     display: block;
     margin: auto;
+}
+
+img#logo {
+    display: inline;
+    margin: 0;
 }

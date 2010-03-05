@@ -69,6 +69,8 @@
   ><a href="#TOC"
     >install</a
     ></h1
+  ><p
+  >available soon. be patient.</p
   ></div
 ><div id="use"
 ><h1
@@ -318,7 +320,7 @@ Common flags:
       >import Criterion.Main
 
 main = defaultMain [bgroup &quot;fac&quot; [bench (show n) (nf product [1..n]) | n &lt;- ns]]
- where ns = [10^4 * k | k &lt;- [1,2,3]] :: [Integer]
+ where ns = [k*10^4 | k &lt;- [1,2,3]] :: [Integer]
 </code
       ></pre
     ><p
@@ -388,7 +390,7 @@ fac n = n * fac (n-1)
 import Progression.Main
 
 main = defaultMain (bgroup &quot;fac&quot; [bench (show n) (nf fac n) | n &lt;- ns])
- where ns = [10^4 * k | k &lt;- [1,2,3]] :: [Integer]
+ where ns = [k*10^4 | k &lt;- [1,2,3]] :: [Integer]
 
 fac 0 = 1
 fac n = n * fac (n-1)

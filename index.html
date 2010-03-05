@@ -408,10 +408,55 @@ Common flags:
 </code
       ></pre
     ><p
-    >These three call generate a bar chart whith one bar for each benchmark whose size is proportional to the corresponding run time.</p
+    >These three calls generate a bar chart with one bar for each benchmark whose size is proportional to the corresponding run time.</p
     ><p
     ><img src="http://sebfisch.github.com/haskell-barchart/examples/factorial.png" alt="fac"
        /></p
+    ><p
+    >We can now modify the program to use an explicitly recursive definition of the fibonacci function to see whether this affects the run times.</p
+    ><pre class="sourceCode Haskell"
+    ><code
+      ><span class="Normal NormalText"
+	>fac </span
+	><span class="DecVal Decimal"
+	>0</span
+	><span class="Normal NormalText"
+	> = </span
+	><span class="DecVal Decimal"
+	>1</span
+	><br
+	 /><span class="Normal NormalText"
+	>fac n = n * fac (n</span
+	><span class="DecVal Decimal"
+	>-1</span
+	><span class="Normal NormalText"
+	>)</span
+	><br
+	 /></code
+      ></pre
+    ><p
+    >After generating another summary file <code
+      >factorial2.csv</code
+      > we could generate another bar chart to visualise it and view both charts side by side to compare the run times of the different implementations of the fibonacci function. However, instead of generating two different charts we can also generate a single chart that combines information from multiple benchmark summaries.</p
+    ><pre
+    ><code
+      ># barchart criterion --summary-comparison factorial.csv factorial2.csv
+</code
+      ></pre
+    ><p
+    >We can pass as many summary files as we like and barchart will draw a bar for each summary file with blocks representing the different benchmarks.</p
+    ><p
+    >![fac-summaries]</p
+    ><p
+    >We can see clearly that the original implementation using <code
+      >product</code
+      > is faster than the explicitly recursive definition of the factorial function.</p
+    ><p
+    >Instead of drawing different bars for different summaries, barchart can also draw different bars for the different benchmarks with blocks for the summaries.</p
+    ><p
+    >![fac-benchmarks]</p
+    ><p
+    >This is less useful for comparing different implementations but useful to compare the different benchmarks using all implementations at once.</p
     ></div
   ><div id="progression"
   ><h2

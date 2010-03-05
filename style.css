@@ -19,3 +19,9 @@ h1 a, h2 a, #TOC a {
     font-weight: bold;
     color: forestgreen;
 }
+
+pre code {
+    display: block;
+    margin: 1em; padding: 1em;
+    background-color: aliceblue;
+}

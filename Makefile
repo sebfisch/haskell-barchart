@@ -5,5 +5,4 @@ index.html: README.markdown
                --sanitize-html \
                --table-of-contents \
                --email-obfuscation=references \
-               --indented-code-classes=haskell \
                --output=$@ $<

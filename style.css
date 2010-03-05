@@ -3,6 +3,19 @@ body {
     margin: 10%;
 }
 
-h1, h2 {
+#TOC {
+    margin: 0; padding: 1em;
+    text-align: center;
+}
+
+#TOC li {
+    list-style: none;
+    display: inline;
+    margin: 1em; padding: 0px;
+}
+
+h1 a, h2 a, #TOC a {
+    text-decoration: none;
+    font-weight: bold;
     color: forestgreen;
 }

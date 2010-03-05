@@ -6,3 +6,4 @@ dist/*
 examples/factorial
 examples/factorial.csv
 examples/factorial2.csv
+examples/plot.csv

@@ -38,7 +38,7 @@ supply one, then barchart uses the basename of the CSV file as title
 of the chart.
 
 If you want to track practice hours over multiple weeks, you can
-create a file with a *mean*, *minimal*, and *maximal* values for each
+create a file with a _mean_, _minimal_, and _maximal_ values for each
 day of the week:
 
     Mon,1.2,0.9,1.7
@@ -72,24 +72,97 @@ and split it by months, you can create a CSV file like this:
     Sat,3.2,1.7,4.3
     Sun,3.1,3.2,2.1
 
-We can use `barchart` (in the default mode) to create the following
-diagram:
+We can use `barchart` (in the default mode) 
+
+    # barchart --title="Practice hours per month" --division="Jan Feb Mar" guitar-months.csv
+
+to create the following diagram:
 
 ![Practice hours by month][guitar-months]
 
-Each bar is divided into different blocks which all an associated
+Each bar is divided into different blocks which all have an associated
 amount of practice hours. Green blocks represent practice hours in
 January, red blocks in February, and blue blocks represent practice
 hours in March. The block labels are given to `barchart` via the
-`--division` flag.
+`--division` flag. You can also draw multiple blocks per bar in
+`interval` mode but then three values (_mean_,_min_,_max_) are used
+for each block. Hence, if you want to depict mean practice times with
+deviations for January, February, and March, you must create a CSV
+file where each day of the week is followed by nine practice times.
 
 ## flags
+
+The `barchart` program can be configured using command-line flags. We
+can use the `--help` flag to print a summary:
+
+    # barchart --help
+    Bar Chart 0.1
+    
+    barchart [blocks] [FLAG] [FILE]
+    
+    barchart intervals [FLAG] [FILE]
+    
+    barchart criterion [FLAG] [FILE]
+    
+         --summary               Show benchmark summary (default)
+      -s --summary-comparison    Compare different benchmark summaries
+      -b --benchmark-comparison  Compare different benchmarks
+    
+    barchart progression [FLAG] [FILE]
+    
+      -s --summary-comparison    Breakdown chart by benchmark summary (default)
+      -b --benchmark-comparison  Breakdown chart by benchmarks
+    
+    Common flags:
+      -? --help[=FORMAT]         Show usage information (optional format)
+      -V --version               Show version information
+      -v --verbose               Higher verbosity
+      -q --quiet                 Lower verbosity
+      -o --out-file=FILE         Name of generated file
+      -t --title=STRING          Title of bar chart
+      -x --xlabel=STRING         Label of x axis
+      -y --ylabel=STRING         Label of y axis
+      -g --guess-file-type       Guess output file type by name (default)
+         --png                   Generate .png file
+         --svg                   Generate .svg file
+         --pdf                   Generate .pdf file
+         --ps                    Generate .ps file
+      -d --division=STRINGS      Labels separated by whitespace
+      -c --colors=STRINGS        Color names separated by whitespace
+      -w --width=NUM             Width of generated bar chart (default=600)
+      -h --height=NUM            Height of generated bar chart (default=300)
+      -l --label-size=NUM        Font size used for labels (default=12)
+         --bar-width=FLOAT       Bar width between 0 and 1 (default=0.3)
+
+`barchart` can be run in different modes. We have already seen the
+default (`blocks`) mode and the `intervals` mode. The `criterion` and
+`progression` modes are described below. Most command-line flags are
+self explanatory. Apart from what we have seen in the example above,
+the following options are particularly interesting:
+
+  * `--xlabel` and `--ylabel` label the axis of the coordinate system.
+
+  * `--colors` change the colors of the different blocks of a bar. You
+    can use all color names listed in the [SVG 1.1
+    Specification][Colors]. If you specify fewer colors than there are
+    blocks, then colors are reused in a cyclic fashion. The default
+    value for this argument is `--colors="seagreen firebrick
+    midnightblue"`.
+
+  * `--width` and `--height` specify the dimensions of the generated
+    _chart_. The generated _picture_ is a little larger because of the
+    title and bar labels. If you want to draw a chart with many bars,
+    you should increase the width compared to the height or tweak the
+    bar width.
+
+  * `--bar-width` is a value between 0.0 and 1.0 hat specifies how
+    thick the bars are compared to the bar distance. With a value of
+    `1.0` the bars are drawn directly next to each other, a value of
+    0.0 would draw bars that are so thin that you cannot see them.
 
 ## criterion
 
 ## progression
-
-# api
 
 # contribute
 
@@ -120,3 +193,4 @@ For questions or feedback email [Sebastian Fischer][email].
 [progression]: http://hackage.haskell.org/package/progression
 [Diagrams]: http://code.haskell.org/diagrams/
 [Gtk2Hs]: http://www.haskell.org/gtk2hs/
+[Colors]: http://www.w3.org/TR/SVG11/types.html#ColorKeywords

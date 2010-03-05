@@ -264,7 +264,7 @@ progression wants the summary files to have specific names, hence, we
 rename them appropriately before generating a graph. The progression
 tool generates two files `plot.csv` and `plot.png`. Here, we are not
 interested in the generated PNG file but pass the CSV file to the
-barchart program in progression mode.
+barchart program in `progression` mode.
 
     # barchart progression --division="product recursive" plot.csv
 

@@ -5,6 +5,7 @@ body {
 
 #TOC>ul {
     margin: 0; padding: 0;
+    text-align: right;
 }
 
 #TOC>ul>li {
@@ -19,7 +20,7 @@ body {
 
 #TOC>ul>li>ul>li {
     display: inline;
-    margin: 1em; padding: 0;
+    margin-left: 1em; padding: 0;
 }
 
 h1 a, h2 a, #TOC a {
@@ -29,7 +30,7 @@ h1 a, h2 a, #TOC a {
 }
 
 a {
-    color: midnightblue;
+    color: firebrick;
 }
 
 pre code {

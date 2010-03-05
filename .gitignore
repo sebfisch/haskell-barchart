@@ -5,3 +5,4 @@ dist/*
 .DS_Store
 examples/factorial
 examples/factorial.csv
+examples/factorial2.csv

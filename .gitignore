@@ -1,2 +1,7 @@
 dist/*
+*.hi
+*.o
 *.png
+.DS_Store
+examples/factorial
+examples/factorial.csv

@@ -256,6 +256,8 @@ For questions or feedback email [Sebastian Fischer][email].
 [guitar-mean]: http://sebfisch.github.com/haskell-barchart/examples/guitar-mean.png
 [guitar-months]: http://sebfisch.github.com/haskell-barchart/examples/guitar-months.png
 [fac]: http://sebfisch.github.com/haskell-barchart/examples/factorial.png
+[fac-summaries]: http://sebfisch.github.com/haskell-barchart/examples/fac-summaries.png
+[fac-benchmarks]: http://sebfisch.github.com/haskell-barchart/examples/fac-benchmarks.png
 
 [criterion]: http://hackage.haskell.org/package/criterion
 [progression]: http://hackage.haskell.org/package/progression

@@ -1,3 +1,7 @@
 body {
     font-family: Optima, sans-serif;
 }
+
+h1, h2 {
+    color: forestgreen;
+}

@@ -328,7 +328,7 @@ For questions or feedback email [Sebastian Fischer][email].
 [criterion]: http://hackage.haskell.org/package/criterion
 [progression]: http://hackage.haskell.org/package/progression
 [Diagrams]: http://code.haskell.org/diagrams/
-[CmdArgs]: http://code.haskell.org/cmdargs/
+[CmdArgs]: http://community.haskell.org/~ndm/cmdargs/
 [Gtk2Hs]: http://www.haskell.org/gtk2hs/
 [Colors]: http://www.w3.org/TR/SVG11/types.html#ColorKeywords
 [factorial]: http://en.wikipedia.org/wiki/Factorial

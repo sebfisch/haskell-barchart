@@ -10,33 +10,32 @@ part of [Gtk2Hs].
 # use
 
 Bar charts can be created from CSV files using the `barchart`
-command-line utility. We can create a chart of the top five most
-popular Haskell packages (as of march 2009, I did not find more recent
-data) by creating a file `top5.csv` with the following contents:
+command-line utility. For example, if you want to track how many hours
+you practice playing the guitar on each day of the week, you can
+create a file `guitar.csv` with the following contents:
 
-    xmonad,35428
-    HTTP,26203
-    zlib,24431
-    Cabal,23691
-    X11,21563
+    Mon,1.2
+    Tue,0.3
+    Wed,2.1
+    Thu,0.9
+    Fri,1.1
+    Sat,3.2
+    Sun,3.1
 
 The call
 
-    # barchart --title="Top 5 Haskell Packages" top5.csv 
+    # barchart --title="Practice hours" guitar.csv 
 
-creates a file `top5.png` which looks like this:
+creates a file `guitar.png` which looks like this:
 
-![Top 5 Haskell Packages][top5]
+![Practice hours][guitar]
 
-Each bar is labeled with a Haskell package and has an associated
-number of downloads. The chart is scaled automatically such that the
-largest bar spans the height of the chart. The dimensions of the chart
-can be configured using command-line flags. See below for a
-description of supported flags.
-
-The `--title` flag passed to `barchart` in the above call is
-optional. If you do not supply one, then barchart uses the basename of
-the CSV file as title of the chart.
+Each bar is labeled with a weekday and has an associated practice
+hour. The chart is scaled automatically such that the largest bar
+spans the (configurable, see below) height of the chart. The `--title`
+flag passed to `barchart` in the above call is optional. If you do not
+supply one, then barchart uses the basename of the CSV file as title
+of the chart.
 
 ## flags
 
@@ -60,7 +59,7 @@ For questions or feedback email [Sebastian Fischer][email].
 [GitHub]: http://github.com/sebfisch/haskell-barchart 
 [issues]: http://github.com/sebfisch/haskell-barchart/issues
 
-[top5]: http://sebfisch.github.com/haskell-barchart/examples/top5.png
+[guitar]: http://sebfisch.github.com/haskell-barchart/examples/guitar.png
 
 [criterion]: http://hackage.haskell.org/package/criterion
 [progression]: http://hackage.haskell.org/package/progression

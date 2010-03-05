@@ -58,7 +58,15 @@
   >criterion</a
   > and <a href="http://hackage.haskell.org/package/progression"
   >progression</a
-  >. barchart uses the Haskell <a href="http://code.haskell.org/diagrams/"
+  >. barchart can create <code
+  >.png</code
+  >, <code
+  >.svg</code
+  >, <code
+  >.pdf</code
+  >, and <code
+  >.ps</code
+  > files using the Haskell <a href="http://code.haskell.org/diagrams/"
   >Diagrams</a
   > library for rendering and, hence, depends on a Haskell binding to Cairo which is part of <a href="http://www.haskell.org/gtk2hs/"
   >Gtk2Hs</a
@@ -146,6 +154,34 @@ Sun,3.1,2.3,4.2
   ><p
   ><img src="http://sebfisch.github.com/haskell-barchart/examples/guitar-mean.png" alt="Mean practice hours"
      /></p
+  ><p
+  >In this chart, each bars represents the mean practice hour for a day of the week and the minimum and maximum values are depicted with intervals on the right edge of a bar.</p
+  ><p
+  >If you want to compare your practice hours for each day of the week and split it by months, you can create a CSV file like this:</p
+  ><pre
+  ><code
+    >Mon,1.2,2.1,1.7
+Tue,0.6,0.7,0.8
+Wed,2.1,1.2,2.5
+Thu,0.9,1.5,1.7
+Fri,1.1,1.3,0.7
+Sat,3.2,1.7,4.3
+Sun,3.1,3.2,2.1
+</code
+    ></pre
+  ><p
+  >We can use <code
+    >barchart</code
+    > (in the default mode) to create the following diagram:</p
+  ><p
+  ><img src="http://sebfisch.github.com/haskell-barchart/examples/guitar-months.png" alt="Practice hours by month"
+     /></p
+  ><p
+  >Each bar is divided into different blocks which all an associated amount of practice hours. Green blocks represent practice hours in January, red blocks in February, and blue blocks represent practice hours in March. The block labels are given to <code
+    >barchart</code
+    > via the <code
+    >--division</code
+    > flag.</p
   ><div id="flags"
   ><h2
     ><a href="#TOC"

@@ -49,6 +49,13 @@ day of the week:
     Sat,3.2,1.5,5.2
     Sun,3.1,2.3,4.2
 
+Calling `barchart` in the `interval` mode
+
+    # barchart intervals --title="Mean practice hours" guitar-mean.csv
+
+produces the following bar chart:
+
+![Mean practice hours][guitar-mean]
 
 ## flags
 
@@ -80,6 +87,7 @@ For questions or feedback email [Sebastian Fischer][email].
 [issues]: http://github.com/sebfisch/haskell-barchart/issues
 
 [guitar]: http://sebfisch.github.com/haskell-barchart/examples/guitar.png
+[guitar-mean]: http://sebfisch.github.com/haskell-barchart/examples/guitar-mean.png
 
 [criterion]: http://hackage.haskell.org/package/criterion
 [progression]: http://hackage.haskell.org/package/progression

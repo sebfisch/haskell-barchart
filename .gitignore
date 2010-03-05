@@ -1,2 +1,6 @@
 dist/*
 .DS_Store
+*.hi
+*.o
+examples/factorial
+examples/factorial.csv

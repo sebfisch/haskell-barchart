@@ -8,3 +8,4 @@
 *.pdf
 *.ps
 dist/*
+examples/factorial

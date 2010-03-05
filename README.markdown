@@ -1,9 +1,9 @@
 barchart is a command-line program for generating bar charts from CSV
 files. It has special support for creating charts from data generated
 by the Haskell benchmarking tools [criterion] and
-[progression]. barchart uses the Haskell [Diagrams] library for
-rendering and, hence, depends on a Haskell binding to Cairo which is
-part of [Gtk2Hs].
+[progression]. barchart can create `.png`, `.svg`, `.pdf`, and `.ps`
+files using the Haskell [Diagrams] library for rendering and, hence,
+depends on a Haskell binding to Cairo which is part of [Gtk2Hs].
 
 # install
 
@@ -57,6 +57,32 @@ produces the following bar chart:
 
 ![Mean practice hours][guitar-mean]
 
+In this chart, each bars represents the mean practice hour for a day
+of the week and the minimum and maximum values are depicted with
+intervals on the right edge of a bar.
+
+If you want to compare your practice hours for each day of the week
+and split it by months, you can create a CSV file like this:
+
+    Mon,1.2,2.1,1.7
+    Tue,0.6,0.7,0.8
+    Wed,2.1,1.2,2.5
+    Thu,0.9,1.5,1.7
+    Fri,1.1,1.3,0.7
+    Sat,3.2,1.7,4.3
+    Sun,3.1,3.2,2.1
+
+We can use `barchart` (in the default mode) to create the following
+diagram:
+
+![Practice hours by month][guitar-months]
+
+Each bar is divided into different blocks which all an associated
+amount of practice hours. Green blocks represent practice hours in
+January, red blocks in February, and blue blocks represent practice
+hours in March. The block labels are given to `barchart` via the
+`--division` flag.
+
 ## flags
 
 ## criterion
@@ -88,6 +114,7 @@ For questions or feedback email [Sebastian Fischer][email].
 
 [guitar]: http://sebfisch.github.com/haskell-barchart/examples/guitar.png
 [guitar-mean]: http://sebfisch.github.com/haskell-barchart/examples/guitar-mean.png
+[guitar-months]: http://sebfisch.github.com/haskell-barchart/examples/guitar-months.png
 
 [criterion]: http://hackage.haskell.org/package/criterion
 [progression]: http://hackage.haskell.org/package/progression

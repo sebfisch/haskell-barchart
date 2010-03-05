@@ -52,7 +52,7 @@ conf :: Config
 conf = Config { outFile = "", outputType = PNG,
                 caption = "", xLabel = "", yLabel = "",
                 barColors = map SomeColor [forestgreen,firebrick,midnightblue],
-                dimensions = (800,400),
+                dimensions = (600,300),
                 ratio = 1, fontSize = 12, barRatio = 0.3 }
 
 newtype RunTime = RunTime Double

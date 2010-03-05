@@ -4,3 +4,4 @@ dist/*
 *.o
 examples/factorial
 examples/factorial.csv
+examples/factorial2.csv

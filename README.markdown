@@ -187,10 +187,47 @@ criterion, and visualise it using barchart as follows:
     # ./factorial --summary=factorial.csv
     # barchart criterion factorial.csv
 
-These three call generate a bar chart whith one bar for each benchmark
+These three calls generate a bar chart with one bar for each benchmark
 whose size is proportional to the corresponding run time.
 
 ![fac]
+
+We can now modify the program to use an explicitly recursive
+definition of the fibonacci function to see whether this affects the
+run times.
+
+~~~ { .Haskell }
+fac 0 = 1
+fac n = n * fac (n-1)
+~~~
+
+After generating another summary file `factorial2.csv` we could
+generate another bar chart to visualise it and view both charts side
+by side to compare the run times of the different implementations of
+the fibonacci function. However, instead of generating two different
+charts we can also generate a single chart that combines information
+from multiple benchmark summaries.
+
+    # barchart criterion --summary-comparison factorial.csv factorial2.csv
+
+We can pass as many summary files as we like and barchart will draw a
+bar for each summary file with blocks representing the different
+benchmarks.
+
+![fac-summaries]
+
+We can see clearly that the original implementation using `product` is
+faster than the explicitly recursive definition of the factorial
+function.
+
+Instead of drawing different bars for different summaries, barchart
+can also draw different bars for the different benchmarks with blocks
+for the summaries.
+
+![fac-benchmarks]
+
+This is less useful for comparing different implementations but useful
+to compare the different benchmarks using all implementations at once.
 
 ## progression
 

@@ -1,1 +1,346 @@
-<img id="logo" src="logo.png" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="date" content="" />
+  <style type="text/css">
+    table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode, table.sourceCode pre { margin: 0; padding: 0; border: 0; vertical-align: baseline; border: none; }
+    td.lineNumbers { border-right: 1px solid #AAAAAA; text-align: right; color: #AAAAAA; padding-right: 5px; padding-left: 5px; }
+    td.sourceCode { padding-left: 5px; }
+    pre.sourceCode { }
+    pre.sourceCode span.Normal { }
+    pre.sourceCode span.Keyword { color: #007020; font-weight: bold; } 
+    pre.sourceCode span.DataType { color: #902000; }
+    pre.sourceCode span.DecVal { color: #40a070; }
+    pre.sourceCode span.BaseN { color: #40a070; }
+    pre.sourceCode span.Float { color: #40a070; }
+    pre.sourceCode span.Char { color: #4070a0; }
+    pre.sourceCode span.String { color: #4070a0; }
+    pre.sourceCode span.Comment { color: #60a0b0; font-style: italic; }
+    pre.sourceCode span.Others { color: #007020; }
+    pre.sourceCode span.Alert { color: red; font-weight: bold; }
+    pre.sourceCode span.Function { color: #06287e; }
+    pre.sourceCode span.RegionMarker { }
+    pre.sourceCode span.Error { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+<pre class="sourceCode haskell"
+><code
+  ><span class="Comment"
+    >{-# LANGUAGE ParallelListComp #-}</span
+    ><br
+     /><br
+     /><span class="Keyword"
+    >import</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Normal ModuleName"
+    >Graphics.Rendering.Diagrams</span
+    ><br
+     /><br
+     /><span class="Normal NormalText"
+    >main = renderAs PNG </span
+    ><span class="String"
+    >&quot;logo.png&quot;</span
+    ><span class="Normal NormalText"
+    > (Width </span
+    ><span class="DecVal Decimal"
+    >400</span
+    ><span class="Normal NormalText"
+    >) (pad </span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    > logo)</span
+    ><br
+     /><br
+     /><span class="Normal NormalText"
+    >logo = hcatA bottom (yaxis:hspace </span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    >:</span
+    ><span class="Function"
+    >zipWith</span
+    ><span class="Normal NormalText"
+    > ($) [b,a,r,c,h,a,r,t] colors)</span
+    ><br
+     /><span class="Normal NormalText"
+    >    // xaxis</span
+    ><br
+     /><span class="Normal NormalText"
+    > </span
+    ><span class="Keyword"
+    >where</span
+    ><br
+     /><span class="Normal NormalText"
+    >  xaxis = straight $ pathFromVectors [(</span
+    ><span class="DecVal Decimal"
+    >30</span
+    ><span class="Normal NormalText"
+    >,</span
+    ><span class="DecVal Decimal"
+    >0</span
+    ><span class="Normal NormalText"
+    >)]</span
+    ><br
+     /><span class="Normal NormalText"
+    >  yaxis = straight $ pathFromVectors [(</span
+    ><span class="DecVal Decimal"
+    >0</span
+    ><span class="Normal NormalText"
+    >,</span
+    ><span class="DecVal Decimal"
+    >6</span
+    ><span class="Normal NormalText"
+    >)]</span
+    ><br
+     /><br
+     /><span class="Normal NormalText"
+    >colors = </span
+    ><span class="Function"
+    >cycle</span
+    ><span class="Normal NormalText"
+    > [seagreen,firebrick,midnightblue]</span
+    ><br
+     /><br
+     /><span class="Normal NormalText"
+    >b col = hcatA bottom [fillColor col $ roundRectF </span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="DecVal Decimal"
+    >5</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >0.1</span
+    ><span class="Normal NormalText"
+    >,</span
+    ><br
+     /><span class="Normal NormalText"
+    >                      translateX (-</span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    >) $ arc </span
+    ><span class="Float"
+    >1.5</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >0.6</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >0.4</span
+    ><span class="Normal NormalText"
+    >]</span
+    ><br
+     /><br
+     /><span class="Normal NormalText"
+    >a col = translateX (-</span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    >) $</span
+    ><br
+     /><span class="Normal NormalText"
+    >        hcatA bottom [translateX </span
+    ><span class="Float"
+    >0.5</span
+    ><span class="Normal NormalText"
+    > $ arc </span
+    ><span class="Float"
+    >1.2</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >0.1</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >0.9</span
+    ><span class="Normal NormalText"
+    >,</span
+    ><br
+     /><span class="Normal NormalText"
+    >                     fillColor col $ roundRectF </span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >2.7</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >0.1</span
+    ><span class="Normal NormalText"
+    >]</span
+    ><br
+     /><br
+     /><span class="Normal NormalText"
+    >r col = translateY </span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    > $</span
+    ><br
+     /><span class="Normal NormalText"
+    >        hcatA top [fillColor col $ roundRectF </span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="DecVal Decimal"
+    >3</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >0.1</span
+    ><span class="Normal NormalText"
+    >,</span
+    ><br
+     /><span class="Normal NormalText"
+    >                   translateX (-</span
+    ><span class="Float"
+    >0.5</span
+    ><span class="Normal NormalText"
+    >) $ arc </span
+    ><span class="DecVal Decimal"
+    >2</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >0.5</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >0.75</span
+    ><span class="Normal NormalText"
+    >]</span
+    ><br
+     /><br
+     /><span class="Normal NormalText"
+    >c col = translateX (-</span
+    ><span class="Float"
+    >2.5</span
+    ><span class="Normal NormalText"
+    >) $ arc </span
+    ><span class="Float"
+    >1.5</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >0.1</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >0.9</span
+    ><br
+     /><br
+     /><span class="Normal NormalText"
+    >h col = translateX (-</span
+    ><span class="Float"
+    >1.5</span
+    ><span class="Normal NormalText"
+    >) $</span
+    ><br
+     /><span class="Normal NormalText"
+    >        hcatA bottom [fillColor col $ roundRectF </span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="DecVal Decimal"
+    >6</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >0.1</span
+    ><span class="Normal NormalText"
+    >,</span
+    ><br
+     /><span class="Normal NormalText"
+    >                      vcatA right [translateY </span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    > $ arc </span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >0.5</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    >,</span
+    ><br
+     /><span class="Normal NormalText"
+    >                                   straight $ pathFromVectors [(</span
+    ><span class="DecVal Decimal"
+    >0</span
+    ><span class="Normal NormalText"
+    >,</span
+    ><span class="DecVal Decimal"
+    >2</span
+    ><span class="Normal NormalText"
+    >)]]]</span
+    ><br
+     /><br
+     /><span class="Normal NormalText"
+    >t col = translateX (-</span
+    ><span class="DecVal Decimal"
+    >2</span
+    ><span class="Normal NormalText"
+    >) $</span
+    ><br
+     /><span class="Normal NormalText"
+    >        unionA hcenter top [fillColor col $ roundRectF </span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="DecVal Decimal"
+    >5</span
+    ><span class="Normal NormalText"
+    > </span
+    ><span class="Float"
+    >0.1</span
+    ><span class="Normal NormalText"
+    >,</span
+    ><br
+     /><span class="Normal NormalText"
+    >                            translateY </span
+    ><span class="DecVal Decimal"
+    >1</span
+    ><span class="Normal NormalText"
+    > . straight $ pathFromVectors [(</span
+    ><span class="DecVal Decimal"
+    >3</span
+    ><span class="Normal NormalText"
+    >,</span
+    ><span class="DecVal Decimal"
+    >0</span
+    ><span class="Normal NormalText"
+    >)]]</span
+    ><br
+     /></code
+  ></pre
+>
+</body>
+</html>
+

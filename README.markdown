@@ -1,9 +1,9 @@
 barchart is a command-line program for generating bar charts from CSV
 files. It has special support for creating charts from data generated
 by the Haskell benchmarking tools [criterion] and
-[progression]. barchart uses the Haskell [Diagrams] library for
-rendering and, hence, depends on a Haskell binding to Cairo which is
-part of [Gtk2Hs].
+[progression]. barchart can create `.png`, `.svg`, `.pdf`, and `.ps`
+files using the Haskell [Diagrams] library for rendering and, hence,
+depends on a Haskell binding to Cairo which is part of [Gtk2Hs].
 
 # install
 
@@ -56,6 +56,13 @@ Calling `barchart` in the `interval` mode
 produces the following bar chart:
 
 ![Mean practice hours][guitar-mean]
+
+In this chart, each bars represents the mean practice hour for a day
+of the week and the minimum and maximum values are depicted with
+intervals on the right edge of a bar.
+
+If you want to compare your practice hours for each day of the week
+and split it by months, you can create a CSV file like this:
 
 ## flags
 

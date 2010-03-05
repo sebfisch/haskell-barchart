@@ -37,6 +37,19 @@ flag passed to `barchart` in the above call is optional. If you do not
 supply one, then barchart uses the basename of the CSV file as title
 of the chart.
 
+If you want to track practice hours over multiple weeks, you can
+create a file with a *mean*, *minimal*, and *maximal* values for each
+day of the week:
+
+    Mon,1.2,0.9,1.7
+    Tue,0.3,0.1,0.5
+    Wed,2.1,1.5,2.5
+    Thu,0.9,0.4,1.0
+    Fri,1.1,1.0,1.2
+    Sat,3.2,1.5,5.2
+    Sun,3.1,2.3,4.2
+
+
 ## flags
 
 ## criterion
@@ -50,6 +63,13 @@ of the chart.
 The source code is on [GitHub] so you can create or vote on [issues]
 to ask for extensions or fork this project to write extensions
 yourself.
+
+## limitations
+
+Currently, barchart does not support negative quantities and draws
+weird bars if you use them anyway. Also, the legend for blocks is
+sometimes drawn suboptimally. I guess I made a mistake but I cannot
+find it.
 
 # contact
 

@@ -93,7 +93,10 @@ drawBlock :: Measurable a => Config -> SomeColor -> Block a -> Diagram
 drawBlock Config{..} color (Value x) = hcatA bottom [bar, label]
  where
   bar   = block color barRatio (ratio * size x)
-  label = translateX (fontSize/2) . ctext fontSize $ show x
+  label = translateX (fontSize/2)
+        . translateY (fontSize - ratio * size x)
+        . ctext fontSize
+        $ show x
 
 drawBlock Config{..} color Interval{..} = hcatA bottom [bar, deviation, label]
  where

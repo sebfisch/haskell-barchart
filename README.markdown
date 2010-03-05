@@ -14,6 +14,6 @@ yourself.
 For questions or feedback contact [Sebastian Fischer][email].
 
 [email]: mailto:sebf@informatik.uni-kiel.de
-[GitHub]: http://github.com/sebfisch/haskell-barchart
+[GitHub]: http://github.com/sebfisch/haskell-barchart 
 [issues]: http://github.com/sebfisch/haskell-barchart/issues
 

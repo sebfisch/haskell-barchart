@@ -26,11 +26,17 @@ The call
 
 creates a file `top5.png` which looks like this:
 
-![Top 5 Haskell Packages](examples/top5.png)
+![Top 5 Haskell Packages][top5]
+
+Each bar is labeled with a Haskell package and has an associated
+number of downloads. The chart is scaled automatically such that the
+largest bar spans the height of the chart. The dimensions of the chart
+can be configured using command-line flags. See below for a
+description of supported flags.
 
 The `--title` flag passed to `barchart` in the above call is
-optional. If you do not supply one, then `barchart` uses the basename
-of the CSV file as title of the chart.
+optional. If you do not supply one, then barchart uses the basename of
+the CSV file as title of the chart.
 
 ## flags
 
@@ -53,6 +59,8 @@ For questions or feedback email [Sebastian Fischer][email].
 [email]: mailto:sebf@informatik.uni-kiel.de
 [GitHub]: http://github.com/sebfisch/haskell-barchart 
 [issues]: http://github.com/sebfisch/haskell-barchart/issues
+
+[top5]: http://sebfisch.github.com/haskell-barchart/examples/top5.png
 
 [criterion]: http://hackage.haskell.org/package/criterion
 [progression]: http://hackage.haskell.org/package/progression

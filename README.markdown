@@ -9,7 +9,7 @@ yourself.
 
 ## contact
 
-For questions or feedback contact [Sebastian Fischer][email].
+For questions or feedback email [Sebastian Fischer][email].
 
 [email]: mailto:sebf@informatik.uni-kiel.de
 [GitHub]: http://github.com/sebfisch/haskell-barchart 

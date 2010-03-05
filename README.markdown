@@ -134,7 +134,7 @@ can use the `--help` flag to print a summary:
       -w --width=NUM             Width of generated bar chart (default=600)
       -h --height=NUM            Height of generated bar chart (default=300)
       -l --label-size=NUM        Font size used for labels (default=12)
-         --bar-width=FLOAT       Bar width between 0 and 1 (default=0.3)
+      -W --bar-width=FLOAT       Bar width between 0 and 1 (default=0.3)
 
 `barchart` can be run in different modes. We have already seen the
 default (`blocks`) mode and the `intervals` mode. The `criterion` and

@@ -103,6 +103,7 @@ blocksMode =
                     &  typ "NUM",
     bar_width  = barRatio conf
                     &= text "Bar width between 0 and 1"
+                    &  flag "W"
                     &  typ "FLOAT",
     in_files   = [] &= text "CVS files with data to visualise"
                     &  args }
@@ -144,6 +145,7 @@ intervalsMode =
                     &  typ "NUM",
     bar_width  = barRatio conf
                     &= text "Bar width between 0 and 1"
+                    &  flag "W"
                     &  typ "FLOAT",
     in_files   = [] &= text "CVS files with data to visualise"
                     &  args }
@@ -184,6 +186,7 @@ criterionMode =
                     &  typ "NUM",
     bar_width  = barRatio conf
                     &= text "Bar width between 0 and 1"
+                    &  flag "W"
                     &  typ "FLOAT",
     in_files   = [] &= text "CVS files with data to visualise"
                     &  args,
@@ -233,6 +236,7 @@ progressionMode =
                     &  typ "NUM",
     bar_width  = barRatio conf
                     &= text "Bar width between 0 and 1"
+                    &  flag "W"
                     &  typ "FLOAT",
     in_files   = [] &= text "CVS files with data to visualise"
                     &  args,
@@ -257,7 +261,7 @@ main = do execMode <- cmdArgs "Bar Chart 0.0" (map mode execModes)
           exitIf "no input files given" $ null (in_files execMode)
           dispatch execMode
 
-dispatch mode@Blocks{..} = -- forM_ in_files $ \in_file -> putStr in_file
+dispatch mode@Blocks{..} =
   forM_ in_files $ \in_file ->
     writeMultiBarChart
       (config (guessDefaults in_file mode))

@@ -317,6 +317,8 @@ For questions or feedback email [Sebastian Fischer][email].
 [fac]: http://sebfisch.github.com/haskell-barchart/examples/factorial.png
 [fac-summaries]: http://sebfisch.github.com/haskell-barchart/examples/fac-summaries.png
 [fac-benchmarks]: http://sebfisch.github.com/haskell-barchart/examples/fac-benchmarks.png
+[progression-summaries]: http://sebfisch.github.com/haskell-barchart/examples/progression-summaries.png
+[progression-benchmarks]: http://sebfisch.github.com/haskell-barchart/examples/progression-benchmarks.png
 
 [criterion]: http://hackage.haskell.org/package/criterion
 [progression]: http://hackage.haskell.org/package/progression

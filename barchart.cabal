@@ -1,0 +1,19 @@
+Name:          barchart
+Version:       0.1
+Cabal-Version: >= 1.6
+Build-Type:    Simple
+
+Executable barchart
+  Main-Is:              barchart.hs
+  Hs-Source-Dirs:       src
+  Build-Depends:        base >= 3 && < 5,
+                        cmdargs >= 0.1 && < 0.2, 
+                        csv >= 0.1 && < 1.2, 
+                        diagrams >= 0.2 && < 0.3,
+                        filepath >= 1.1 && < 1.2
+  Extensions:           DeriveDataTypeable,
+                        FlexibleContexts,
+                        GeneralizedNewtypeDeriving,
+                        NamedFieldPuns, 
+                        RecordWildCards,
+                        TypeFamilies

@@ -16,6 +16,6 @@
 > a col = hpull 1 $ onBottom [hpull (-0.5) $ arc 1.2 0.1 0.9, bar col 1 2.7]
 > r col = vpull 1 $ hcatA top [bar col 1 3, hpull 0.5 $ arc 2 0.5 0.75]
 > c col = hpull 2 $ arc 2 0.1 0.9
-> h col = hpull 1 $ onBottom [bar col 1 6, arcline]
+> h col = hpull 1.4 $ onBottom [bar col 1 6, arcline]
 >  where arcline = vcatA right [vpull 1 $ arc 1 0.5 1, line (0,2)]
 > t col = hpull 2.5 $ unionA hcenter top [bar col 1 5, vpull 1 $ line (3,0)]

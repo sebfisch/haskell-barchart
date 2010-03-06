@@ -1,3 +1,5 @@
+.PHONY: all
+
 all: index.html logo.png logo.html
 
 index.html: README.markdown logo.include

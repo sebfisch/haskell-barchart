@@ -1,35 +1,21 @@
-> {-# LANGUAGE ParallelListComp #-}
->
 > import Graphics.Rendering.Diagrams
 >
 > main = renderAs PNG "logo.png" (Width 400) (pad 1 1 logo)
 >
-> logo = hcatA bottom (yaxis:hspace 1:zipWith ($) [b,a,r,c,h,a,r,t] colors)
->     // xaxis
->  where
->   xaxis = straight $ pathFromVectors [(30,0)]
->   yaxis = straight $ pathFromVectors [(0,6)]
+> logo = onBottom (yaxis:hspace 1:zipWith ($) [b,a,r,c,h,a,r,t] colors) // xaxis
+>  where xaxis = line (30,0); yaxis = line (0,6)
 >
-> colors = cycle [seagreen,firebrick,midnightblue]
+> onBottom    = hcatA bottom
+> colors      = cycle [seagreen,firebrick,midnightblue]
+> line vec    = straight $ pathFromVectors [vec]
+> bar col w h = fillColor col $ roundRectF w h 0.1
+> hpull       = translateX . negate
+> vpull       = translateY
 >
-> b col = hcatA bottom [fillColor col $ roundRectF 1 5 0.1,
->                       translateX (-1) $ arc 1.5 0.6 0.4]
->
-> a col = translateX (-1) $
->         hcatA bottom [translateX 0.5 $ arc 1.2 0.1 0.9,
->                      fillColor col $ roundRectF 1 2.7 0.1]
->
-> r col = translateY 1 $
->         hcatA top [fillColor col $ roundRectF 1 3 0.1,
->                    translateX (-0.5) $ arc 2 0.5 0.75]
->
-> c col = translateX (-2.5) $ arc 1.5 0.1 0.9
->
-> h col = translateX (-1.5) $
->         hcatA bottom [fillColor col $ roundRectF 1 6 0.1,
->                       vcatA right [translateY 1 $ arc 1 0.5 1,
->                                    straight $ pathFromVectors [(0,2)]]]
->
-> t col = translateX (-2) $
->         unionA hcenter top [fillColor col $ roundRectF 1 5 0.1,
->                             translateY 1 . straight $ pathFromVectors [(3,0)]]
+> b col = onBottom [bar col 1 5, hpull 1 $ arc 1.5 0.6 0.4]
+> a col = hpull 1 $ onBottom [hpull (-0.5) $ arc 1.2 0.1 0.9, bar col 1 2.7]
+> r col = vpull 1 $ hcatA top [bar col 1 3, hpull 0.5 $ arc 2 0.5 0.75]
+> c col = hpull 2.5 $ arc 1.5 0.1 0.9
+> h col = hpull 1.5 $ onBottom [bar col 1 6, arcline]
+>  where arcline = vcatA right [vpull 1 $ arc 1 0.5 1, line (0,2)]
+> t col = hpull 2.5 $ unionA hcenter top [bar col 1 5, vpull 1 $ line (3,0)]

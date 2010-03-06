@@ -29,11 +29,7 @@
 <body>
 <pre class="sourceCode haskell"
 ><code
-  ><span class="Comment"
-    >{-# LANGUAGE ParallelListComp #-}</span
-    ><br
-     /><br
-     /><span class="Keyword"
+  ><span class="Keyword"
     >import</span
     ><span class="Normal NormalText"
     > </span
@@ -62,7 +58,7 @@
     ><br
      /><br
      /><span class="Normal NormalText"
-    >logo = hcatA bottom (yaxis:hspace </span
+    >logo = onBottom (yaxis:hspace </span
     ><span class="DecVal Decimal"
     >1</span
     ><span class="Normal NormalText"
@@ -70,18 +66,14 @@
     ><span class="Function"
     >zipWith</span
     ><span class="Normal NormalText"
-    > ($) [b,a,r,c,h,a,r,t] colors)</span
-    ><br
-     /><span class="Normal NormalText"
-    >    // xaxis</span
+    > ($) [b,a,r,c,h,a,r,t] colors) // xaxis</span
     ><br
      /><span class="Normal NormalText"
     > </span
     ><span class="Keyword"
     >where</span
-    ><br
-     /><span class="Normal NormalText"
-    >  xaxis = straight $ pathFromVectors [(</span
+    ><span class="Normal NormalText"
+    > xaxis = line (</span
     ><span class="DecVal Decimal"
     >30</span
     ><span class="Normal NormalText"
@@ -89,10 +81,7 @@
     ><span class="DecVal Decimal"
     >0</span
     ><span class="Normal NormalText"
-    >)]</span
-    ><br
-     /><span class="Normal NormalText"
-    >  yaxis = straight $ pathFromVectors [(</span
+    >); yaxis = line (</span
     ><span class="DecVal Decimal"
     >0</span
     ><span class="Normal NormalText"
@@ -100,19 +89,38 @@
     ><span class="DecVal Decimal"
     >6</span
     ><span class="Normal NormalText"
-    >)]</span
+    >)</span
     ><br
      /><br
      /><span class="Normal NormalText"
-    >colors = </span
+    >onBottom    = hcatA bottom</span
+    ><br
+     /><span class="Normal NormalText"
+    >colors      = </span
     ><span class="Function"
     >cycle</span
     ><span class="Normal NormalText"
     > [seagreen,firebrick,midnightblue]</span
     ><br
+     /><span class="Normal NormalText"
+    >line vec    = straight $ pathFromVectors [vec]</span
+    ><br
+     /><span class="Normal NormalText"
+    >bar col w h = fillColor col $ roundRectF w h </span
+    ><span class="Float"
+    >0.1</span
+    ><br
+     /><span class="Normal NormalText"
+    >hpull       = translateX . </span
+    ><span class="Function"
+    >negate</span
+    ><br
+     /><span class="Normal NormalText"
+    >vpull       = translateY</span
+    ><br
      /><br
      /><span class="Normal NormalText"
-    >b col = hcatA bottom [fillColor col $ roundRectF </span
+    >b col = onBottom [bar col </span
     ><span class="DecVal Decimal"
     >1</span
     ><span class="Normal NormalText"
@@ -120,18 +128,11 @@
     ><span class="DecVal Decimal"
     >5</span
     ><span class="Normal NormalText"
-    > </span
-    ><span class="Float"
-    >0.1</span
-    ><span class="Normal NormalText"
-    >,</span
-    ><br
-     /><span class="Normal NormalText"
-    >                      translateX (-</span
+    >, hpull </span
     ><span class="DecVal Decimal"
     >1</span
     ><span class="Normal NormalText"
-    >) $ arc </span
+    > $ arc </span
     ><span class="Float"
     >1.5</span
     ><span class="Normal NormalText"
@@ -145,20 +146,16 @@
     ><span class="Normal NormalText"
     >]</span
     ><br
-     /><br
      /><span class="Normal NormalText"
-    >a col = translateX (-</span
+    >a col = hpull </span
     ><span class="DecVal Decimal"
     >1</span
     ><span class="Normal NormalText"
-    >) $</span
-    ><br
-     /><span class="Normal NormalText"
-    >        hcatA bottom [translateX </span
+    > $ onBottom [hpull (-</span
     ><span class="Float"
     >0.5</span
     ><span class="Normal NormalText"
-    > $ arc </span
+    >) $ arc </span
     ><span class="Float"
     >1.2</span
     ><span class="Normal NormalText"
@@ -170,10 +167,7 @@
     ><span class="Float"
     >0.9</span
     ><span class="Normal NormalText"
-    >,</span
-    ><br
-     /><span class="Normal NormalText"
-    >                     fillColor col $ roundRectF </span
+    >, bar col </span
     ><span class="DecVal Decimal"
     >1</span
     ><span class="Normal NormalText"
@@ -181,22 +175,14 @@
     ><span class="Float"
     >2.7</span
     ><span class="Normal NormalText"
-    > </span
-    ><span class="Float"
-    >0.1</span
-    ><span class="Normal NormalText"
     >]</span
     ><br
-     /><br
      /><span class="Normal NormalText"
-    >r col = translateY </span
+    >r col = vpull </span
     ><span class="DecVal Decimal"
     >1</span
     ><span class="Normal NormalText"
-    > $</span
-    ><br
-     /><span class="Normal NormalText"
-    >        hcatA top [fillColor col $ roundRectF </span
+    > $ hcatA top [bar col </span
     ><span class="DecVal Decimal"
     >1</span
     ><span class="Normal NormalText"
@@ -204,18 +190,11 @@
     ><span class="DecVal Decimal"
     >3</span
     ><span class="Normal NormalText"
-    > </span
-    ><span class="Float"
-    >0.1</span
-    ><span class="Normal NormalText"
-    >,</span
-    ><br
-     /><span class="Normal NormalText"
-    >                   translateX (-</span
+    >, hpull </span
     ><span class="Float"
     >0.5</span
     ><span class="Normal NormalText"
-    >) $ arc </span
+    > $ arc </span
     ><span class="DecVal Decimal"
     >2</span
     ><span class="Normal NormalText"
@@ -229,13 +208,12 @@
     ><span class="Normal NormalText"
     >]</span
     ><br
-     /><br
      /><span class="Normal NormalText"
-    >c col = translateX (-</span
+    >c col = hpull </span
     ><span class="Float"
     >2.5</span
     ><span class="Normal NormalText"
-    >) $ arc </span
+    > $ arc </span
     ><span class="Float"
     >1.5</span
     ><span class="Normal NormalText"
@@ -247,16 +225,12 @@
     ><span class="Float"
     >0.9</span
     ><br
-     /><br
      /><span class="Normal NormalText"
-    >h col = translateX (-</span
+    >h col = hpull </span
     ><span class="Float"
     >1.5</span
     ><span class="Normal NormalText"
-    >) $</span
-    ><br
-     /><span class="Normal NormalText"
-    >        hcatA bottom [fillColor col $ roundRectF </span
+    > $ onBottom [bar col </span
     ><span class="DecVal Decimal"
     >1</span
     ><span class="Normal NormalText"
@@ -264,14 +238,14 @@
     ><span class="DecVal Decimal"
     >6</span
     ><span class="Normal NormalText"
-    > </span
-    ><span class="Float"
-    >0.1</span
-    ><span class="Normal NormalText"
-    >,</span
+    >, arcline]</span
     ><br
      /><span class="Normal NormalText"
-    >                      vcatA right [translateY </span
+    > </span
+    ><span class="Keyword"
+    >where</span
+    ><span class="Normal NormalText"
+    > arcline = vcatA right [vpull </span
     ><span class="DecVal Decimal"
     >1</span
     ><span class="Normal NormalText"
@@ -287,10 +261,7 @@
     ><span class="DecVal Decimal"
     >1</span
     ><span class="Normal NormalText"
-    >,</span
-    ><br
-     /><span class="Normal NormalText"
-    >                                   straight $ pathFromVectors [(</span
+    >, line (</span
     ><span class="DecVal Decimal"
     >0</span
     ><span class="Normal NormalText"
@@ -298,18 +269,14 @@
     ><span class="DecVal Decimal"
     >2</span
     ><span class="Normal NormalText"
-    >)]]]</span
+    >)]</span
     ><br
-     /><br
      /><span class="Normal NormalText"
-    >t col = translateX (-</span
-    ><span class="DecVal Decimal"
-    >2</span
+    >t col = hpull </span
+    ><span class="Float"
+    >2.5</span
     ><span class="Normal NormalText"
-    >) $</span
-    ><br
-     /><span class="Normal NormalText"
-    >        unionA hcenter top [fillColor col $ roundRectF </span
+    > $ unionA hcenter top [bar col </span
     ><span class="DecVal Decimal"
     >1</span
     ><span class="Normal NormalText"
@@ -317,18 +284,11 @@
     ><span class="DecVal Decimal"
     >5</span
     ><span class="Normal NormalText"
-    > </span
-    ><span class="Float"
-    >0.1</span
-    ><span class="Normal NormalText"
-    >,</span
-    ><br
-     /><span class="Normal NormalText"
-    >                            translateY </span
+    >, vpull </span
     ><span class="DecVal Decimal"
     >1</span
     ><span class="Normal NormalText"
-    > . straight $ pathFromVectors [(</span
+    > $ line (</span
     ><span class="DecVal Decimal"
     >3</span
     ><span class="Normal NormalText"
@@ -336,7 +296,7 @@
     ><span class="DecVal Decimal"
     >0</span
     ><span class="Normal NormalText"
-    >)]]</span
+    >)]</span
     ><br
      /></code
   ></pre

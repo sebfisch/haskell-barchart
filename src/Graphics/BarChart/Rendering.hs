@@ -81,8 +81,7 @@ drawDescr Config{..} color string =
   block color fontSize fontSize <> text fontSize string
 
 block :: SomeColor -> Double -> Double -> Diagram
-block color width height =
-  lineColor white . fillColor color $ roundRectF width height 0.1
+block color width height = fillColor color $ roundRectF width height 0.1
 
 drawBar :: Measurable a => Config -> Bar a -> Diagram
 drawBar config@Config{..} Bar{..} =

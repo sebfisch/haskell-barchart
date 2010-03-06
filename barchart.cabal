@@ -4,7 +4,7 @@ Cabal-Version: >= 1.6
 Build-Type:    Simple
 
 Executable barchart
-  Main-Is:              barchart.hs
+  Main-is:              barchart.hs
   Hs-Source-Dirs:       src
   Build-Depends:        base >= 3 && < 5,
                         cmdargs >= 0.1 && < 0.2, 

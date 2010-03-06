@@ -160,7 +160,7 @@ the following options are particularly interesting:
   * `--bar-width` is a value between 0.0 and 1.0 hat specifies how
     thick the bars are compared to the bar distance. With a value of
     `1.0` the bars are drawn directly next to each other, a value of
-    0.0 would draw bars that are so thin that you cannot see them.
+    0.0 draws bars that are actually lines.
 
 ## criterion
 
@@ -274,14 +274,14 @@ of the names of the summary files, we provide labels using the
 
 ![progression-summaries]
 
-The run times of the first implementation are normalised to 100% and
+The run times of the first implementation are normalised to 100 % and
 the run times of the second implementation are depicted relative to
 the first. Like in `criterion` mode we can also flip the axis in
 `progression` mode.
 
     # barchart progression --benchmark-comparison --division="product recursive" plot.csv
 
-Now the first benchmark is normalised to 100% in each bar so this
+Now the first benchmark is normalised to 100 % in each bar so this
 diagram is of questionable use.
 
 ![progression-benchmarks]

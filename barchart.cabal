@@ -18,7 +18,7 @@ License-File:  LICENSE
 Author:        Sebastian Fischer
 Maintainer:    Sebastian Fischer
 Bug-Reports:   http://github.com/sebfisch/haskell-barchart/issues
-Homepage:      http://sebfish.github.com/haskell-barchart
+Homepage:      http://sebfisch.github.com/haskell-barchart
 Build-Type:    Simple
 Stability:     experimental
 

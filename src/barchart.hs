@@ -1,6 +1,7 @@
 {-# LANGUAGE NamedFieldPuns, RecordWildCards, DeriveDataTypeable #-}
 
 import Graphics.BarChart hiding ( Intervals )
+import Graphics.BarChart.Types ( readColor )
 
 import Data.Char ( toLower )
 import Data.Maybe ( fromMaybe )

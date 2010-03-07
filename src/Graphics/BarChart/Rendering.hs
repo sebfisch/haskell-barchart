@@ -9,9 +9,14 @@ import Graphics.Rendering.Diagrams.Types ( SomeColor )
 
 import Graphics.BarChart.Types
 
+-- | Renders a bar chart as @barchart.png@ according to the default
+--   configuration 'conf'.
+-- 
 render :: Measurable a => BarChart a -> IO ()
-render = renderWith conf
+render = renderWith conf{ outFile = "barchart.png" }
 
+-- | Renders a bar chart according to a custom configuration.
+-- 
 renderWith :: Measurable a => Config -> BarChart a -> IO ()
 renderWith config@Config{..} chart =
   do renderAs outputType outFile (Width (fromIntegral width))
@@ -20,6 +25,9 @@ renderWith config@Config{..} chart =
      putStrLn $ "Chart written in file " ++ outFile
  where (width,_) = dimensions
 
+-- | This function can be used to embed bar charts into bigger
+--   'Diagram's.
+-- 
 diagram :: Measurable a => Config -> BarChart a -> Diagram
 diagram config@Config{..} chart@BarChart{..} =
   drawBarChart config{ ratio     = hratio / wratio,

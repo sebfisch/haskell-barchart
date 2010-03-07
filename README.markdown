@@ -232,7 +232,7 @@ results. It generates charts similar to the summary comparisons
 discussed above but draws bars for different benchmarks next to each
 other rather than as boxes on top of each other in a single
 bar. Drawing the results of all benchmarks for a specific
-implementation on top of each other lets you see immediately, which
+implementation on top of each other lets you see immediately which
 implementation is the fastest _in total_ because the total height of
 the bar is the sum of all benchmarks for the corresponding
 implementation. However, progression provides features that barchart

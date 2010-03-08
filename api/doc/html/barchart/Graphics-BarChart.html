@@ -1,0 +1,3622 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--Rendered using the Haskell Html Library v0.2-->
+<HTML
+><HEAD
+><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"
+><TITLE
+>Graphics.BarChart</TITLE
+><LINK HREF="haddock.css" REL="stylesheet" TYPE="text/css"
+><SCRIPT SRC="haddock-util.js" TYPE="text/javascript"
+></SCRIPT
+><SCRIPT TYPE="text/javascript"
+>window.onload = function () {setSynopsis("mini_Graphics-BarChart.html")};</SCRIPT
+></HEAD
+><BODY
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="topbar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><IMG SRC="haskell_icon.gif" WIDTH="16" HEIGHT="16" ALT=" "
+></TD
+><TD CLASS="title"
+>barchart-0.1.1: Creating Bar Charts in Haskell</TD
+><TD CLASS="topbut"
+><A HREF="src/Graphics-BarChart.html"
+>Source code</A
+></TD
+><TD CLASS="topbut"
+><A HREF="index.html"
+>Contents</A
+></TD
+><TD CLASS="topbut"
+><A HREF="doc-index.html"
+>Index</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="modulebar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><FONT SIZE="6"
+>Graphics.BarChart</FONT
+></TD
+><TD ALIGN="right"
+><TABLE CLASS="narrow" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="infohead"
+>Stability</TD
+><TD CLASS="infoval"
+>experimental</TD
+></TR
+><TR
+><TD CLASS="infohead"
+>Maintainer</TD
+><TD CLASS="infoval"
+>Sebastian Fischer &lt;mailto:sebf@informatik.uni-kiel.de&gt;</TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="section4"
+><B
+>Contents</B
+></TD
+></TR
+><TR
+><TD
+><DL
+><DT
+><A HREF="#1"
+>Reading from CSV files
+</A
+></DT
+><DD
+><DL
+><DT
+><A HREF="#2"
+>Writing images
+</A
+></DT
+><DT
+><A HREF="#3"
+>Creating bar charts
+</A
+></DT
+><DT
+><A HREF="#4"
+>Bar chart representations
+</A
+></DT
+></DL
+></DD
+><DT
+><A HREF="#5"
+>Rendering
+</A
+></DT
+><DD
+><DL
+><DT
+><A HREF="#6"
+>Creating diagrams
+</A
+></DT
+></DL
+></DD
+><DT
+><A HREF="#7"
+>Benchmarking visualisation
+</A
+></DT
+><DD
+><DL
+><DT
+><A HREF="#8"
+>Criterion
+</A
+></DT
+><DT
+><A HREF="#9"
+>Progression
+</A
+></DT
+></DL
+></DD
+></DL
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Description</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+>This library provides functions and data type for generating bar
+ charts, for example, from CSV files. If the functionality provided
+ by the command-line program is insufficient for your needs, you can
+ use the API provided by this library to draw custom bar charts.
+</P
+><P
+>The library provides high-level functions to generate bar-chart
+ values from different types but also exports the underlying
+ datatype and all functions used for rendering such that you have
+ access to all internal details.
+</P
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Synopsis</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AwriteMultiBarChart"
+>writeMultiBarChart</A
+> :: <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+> -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+> -&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AwriteIntervalChart"
+>writeIntervalChart</A
+> :: <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+> -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+> -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AwriteMultiBarIntervalChart"
+>writeMultiBarIntervalChart</A
+> :: <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+> -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+> -&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A HREF="#t%3AConfig"
+>Config</A
+>  = <A HREF="#v%3AConfig"
+>Config</A
+> {<TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3AoutFile"
+>outFile</A
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+></TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3AoutputType"
+>outputType</A
+> :: OutputType</TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Acaption"
+>caption</A
+> :: <A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+></TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3AxLabel"
+>xLabel</A
+> :: <A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+></TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3AyLabel"
+>yLabel</A
+> :: <A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+></TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3AbarColors"
+>barColors</A
+> :: [SomeColor]</TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Adimensions"
+>dimensions</A
+> :: (<A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3AInt"
+>Int</A
+>, <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3AInt"
+>Int</A
+>)</TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Aratio"
+>ratio</A
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3AfontSize"
+>fontSize</A
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3AbarRatio"
+>barRatio</A
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+></TR
+></TABLE
+>}</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>type</SPAN
+> <A HREF="#t%3ALabel"
+>Label</A
+> = <A HREF="http://code.haskell.org/diagrams/doc/html/base/Data-Char.html#t%3AString"
+>String</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AmultiBarChart"
+>multiBarChart</A
+> :: (<A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a, <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Read.html#t%3ARead"
+>Read</A
+> a) =&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] -&gt; CSV -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AintervalChart"
+>intervalChart</A
+> :: (<A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a, <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Read.html#t%3ARead"
+>Read</A
+> a) =&gt; CSV -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AmultiBarIntervalChart"
+>multiBarIntervalChart</A
+> :: (<A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a, <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Read.html#t%3ARead"
+>Read</A
+> a) =&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] -&gt; CSV -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>class</SPAN
+> <A HREF="http://code.haskell.org/diagrams/doc/html/base/Prelude.html#t%3ANum"
+>Num</A
+> a =&gt; <A HREF="#t%3AMeasurable"
+>Measurable</A
+> a  <SPAN CLASS="keyword"
+>where</SPAN
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Asize"
+>size</A
+> :: a -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A HREF="#t%3AMultiBars"
+>MultiBars</A
+> a = <A HREF="#v%3AMultiBars"
+>MultiBars</A
+> [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] [(<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>, [a])]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AparseMultiBars"
+>parseMultiBars</A
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Read.html#t%3ARead"
+>Read</A
+> a =&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] -&gt; CSV -&gt; <A HREF="Graphics-BarChart.html#t%3AMultiBars"
+>MultiBars</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AdrawMultiBars"
+>drawMultiBars</A
+> :: <A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a =&gt; <A HREF="Graphics-BarChart.html#t%3AMultiBars"
+>MultiBars</A
+> a -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>newtype</SPAN
+>  <A HREF="#t%3AIntervals"
+>Intervals</A
+> a = <A HREF="#v%3AIntervals"
+>Intervals</A
+> [(<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>, (a, a, a))]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AparseIntervals"
+>parseIntervals</A
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Read.html#t%3ARead"
+>Read</A
+> a =&gt; CSV -&gt; <A HREF="Graphics-BarChart.html#t%3AIntervals"
+>Intervals</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AdrawIntervals"
+>drawIntervals</A
+> :: <A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a =&gt; <A HREF="Graphics-BarChart.html#t%3AIntervals"
+>Intervals</A
+> a -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A HREF="#t%3AMultiBarIntervals"
+>MultiBarIntervals</A
+> a = <A HREF="#v%3AMBIntervals"
+>MBIntervals</A
+> [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] [(<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>, [(a, a, a)])]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AparseMultiBarIntervals"
+>parseMultiBarIntervals</A
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Read.html#t%3ARead"
+>Read</A
+> a =&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] -&gt; CSV -&gt; <A HREF="Graphics-BarChart.html#t%3AMultiBarIntervals"
+>MultiBarIntervals</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AdrawMultiBarIntervals"
+>drawMultiBarIntervals</A
+> :: <A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a =&gt; <A HREF="Graphics-BarChart.html#t%3AMultiBarIntervals"
+>MultiBarIntervals</A
+> a -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AmergeIntervals"
+>mergeIntervals</A
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/base/Prelude.html#t%3ANum"
+>Num</A
+> a =&gt; [(<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>, <A HREF="Graphics-BarChart.html#t%3AIntervals"
+>Intervals</A
+> a)] -&gt; <A HREF="Graphics-BarChart.html#t%3AMultiBarIntervals"
+>MultiBarIntervals</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AflipMultiBarIntervals"
+>flipMultiBarIntervals</A
+> ::  <A HREF="Graphics-BarChart.html#t%3AMultiBarIntervals"
+>MultiBarIntervals</A
+> a -&gt; <A HREF="Graphics-BarChart.html#t%3AMultiBarIntervals"
+>MultiBarIntervals</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A HREF="#t%3ABarChart"
+>BarChart</A
+> a = <A HREF="#v%3ABarChart"
+>BarChart</A
+> {<TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Ablock_labels"
+>block_labels</A
+> :: [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>]</TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Abars"
+>bars</A
+> :: [<A HREF="Graphics-BarChart.html#t%3ABar"
+>Bar</A
+> a]</TD
+></TR
+></TABLE
+>}</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A HREF="#t%3ABar"
+>Bar</A
+> a = <A HREF="#v%3ABar"
+>Bar</A
+> {<TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Alabel"
+>label</A
+> :: <A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+></TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Ablocks"
+>blocks</A
+> :: [<A HREF="Graphics-BarChart.html#t%3ABlock"
+>Block</A
+> a]</TD
+></TR
+></TABLE
+>}</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A HREF="#t%3ABlock"
+>Block</A
+> a </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+>= <A HREF="#v%3AValue"
+>Value</A
+> a</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AInterval"
+>Interval</A
+> {<TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Amean"
+>mean</A
+> :: a</TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Alower"
+>lower</A
+> :: a</TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Aupper"
+>upper</A
+> :: a</TD
+></TR
+></TABLE
+>}</TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Arender"
+>render</A
+> :: <A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a =&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3ArenderWith"
+>renderWith</A
+> :: <A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a =&gt; <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+> -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Aconf"
+>conf</A
+> :: <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Adiagram"
+>diagram</A
+> :: <A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a =&gt; <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+> -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a -&gt; Diagram</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AwriteCriterionChart"
+>writeCriterionChart</A
+> :: <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+> -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+> -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AwriteComparisonChart"
+>writeComparisonChart</A
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Bool.html#t%3ABool"
+>Bool</A
+> -&gt; <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+> -&gt; [<A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+>] -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AcriterionChart"
+>criterionChart</A
+> :: CSV -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> <A HREF="Graphics-BarChart.html#t%3ARunTime"
+>RunTime</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AcomparisonChart"
+>comparisonChart</A
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Bool.html#t%3ABool"
+>Bool</A
+> -&gt; [(<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>, CSV)] -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> <A HREF="Graphics-BarChart.html#t%3ARunTime"
+>RunTime</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>newtype</SPAN
+>  <A HREF="#t%3ARunTime"
+>RunTime</A
+>  = <A HREF="#v%3ARunTime"
+>RunTime</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AwriteProgressionChart"
+>writeProgressionChart</A
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Bool.html#t%3ABool"
+>Bool</A
+> -&gt; <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+> -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+> -&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AprogressionChart"
+>progressionChart</A
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Bool.html#t%3ABool"
+>Bool</A
+> -&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] -&gt; CSV -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> <A HREF="Graphics-BarChart.html#t%3ARatio"
+>Ratio</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>newtype</SPAN
+>  <A HREF="#t%3ARatio"
+>Ratio</A
+>  = <A HREF="#v%3ARatio"
+>Ratio</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+><A NAME="1"
+><A NAME="1"
+>Reading from CSV files
+</A
+></A
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>There are three different modes for parsing simple CSV files:
+   treating different values in one row as blocks of one bar,
+   treating them as deviations from a mean value, or both. 
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section2"
+><A NAME="2"
+><A NAME="2"
+>Writing images
+</A
+></A
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>The following three functions implement these modes parsing the
+   input from a CSV file and producing output in an image file.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:writeMultiBarChart"
+><A NAME="v%3AwriteMultiBarChart"
+></A
+></A
+><B
+>writeMultiBarChart</B
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser.html#writeMultiBarChart"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+>:: <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+></TD
+><TD CLASS="rdoc"
+>where and how to draw the bar chart
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+>-&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+></TD
+><TD CLASS="rdoc"
+>CSV file to read
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+>-&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>]</TD
+><TD CLASS="rdoc"
+>if non-empty, used as legend for blocks
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+>-&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="ndoc" COLSPAN="2"
+>The first column of the CSV file is parsed as names of the
+   bars. The height of each bar corresponds to the sum of all
+   subsequent entries. If there is more than one entry, the bars are
+   split into blocks.
+</TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:writeIntervalChart"
+><A NAME="v%3AwriteIntervalChart"
+></A
+></A
+><B
+>writeIntervalChart</B
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser.html#writeIntervalChart"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+>:: <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+></TD
+><TD CLASS="rdoc"
+>where and how to draw the bar chart
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+>-&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+></TD
+><TD CLASS="rdoc"
+>CSV file to read
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+>-&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="ndoc" COLSPAN="2"
+>The first column of the CSV file is parsed as names of the
+   bars. Three entries following each bar name are parsed as mean,
+   minimum, and maximum value and depicted using an interval next to
+   the bar.
+</TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:writeMultiBarIntervalChart"
+><A NAME="v%3AwriteMultiBarIntervalChart"
+></A
+></A
+><B
+>writeMultiBarIntervalChart</B
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser.html#writeMultiBarIntervalChart"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+>:: <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+></TD
+><TD CLASS="rdoc"
+>where and how to draw the bar chart
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+>-&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+></TD
+><TD CLASS="rdoc"
+>CSV file to read
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+>-&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>]</TD
+><TD CLASS="rdoc"
+>legend for blocks
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+>-&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="ndoc" COLSPAN="2"
+>The first column of the CSV file is parsed as names of the
+   bars. The entries following each bar name are parsed as triples
+   of mean, minimum, and maximum value and depicted using an
+   interval next to the bar. The number of subsequent entries must
+   be a multiple of three and each bar is divided into a
+   corresponding number of blocks.
+</TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A NAME="t:Config"
+><A NAME="t%3AConfig"
+></A
+></A
+><B
+>Config</B
+>  </TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#Config"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Specifies how bar charts are rendered
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="5" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:Config"
+><A NAME="v%3AConfig"
+></A
+></A
+><B
+>Config</B
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="body" COLSPAN="2"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:outFile"
+><A NAME="v%3AoutFile"
+></A
+></A
+><B
+>outFile</B
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+></TD
+><TD CLASS="rdoc"
+>file to which the bar chart is written
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:outputType"
+><A NAME="v%3AoutputType"
+></A
+></A
+><B
+>outputType</B
+> :: OutputType</TD
+><TD CLASS="rdoc"
+>Type of generated file
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:caption"
+><A NAME="v%3Acaption"
+></A
+></A
+><B
+>caption</B
+> :: <A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+></TD
+><TD CLASS="rdoc"
+>Title of the generated chart
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:xLabel"
+><A NAME="v%3AxLabel"
+></A
+></A
+><B
+>xLabel</B
+> :: <A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+></TD
+><TD CLASS="rdoc"
+>Label of the x-axis
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:yLabel"
+><A NAME="v%3AyLabel"
+></A
+></A
+><B
+>yLabel</B
+> :: <A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+></TD
+><TD CLASS="rdoc"
+>label of the y-axis
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:barColors"
+><A NAME="v%3AbarColors"
+></A
+></A
+><B
+>barColors</B
+> :: [SomeColor]</TD
+><TD CLASS="rdoc"
+>Colors for the different blocks of a bar. If there are fewer
+   colors than blocks, then colors are reused in a cyclic fashion.
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:dimensions"
+><A NAME="v%3Adimensions"
+></A
+></A
+><B
+>dimensions</B
+> :: (<A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3AInt"
+>Int</A
+>, <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3AInt"
+>Int</A
+>)</TD
+><TD CLASS="rdoc"
+>Dimensions of the generated chart. The image will be a bit
+   larger because of additiona space used for labels.
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:ratio"
+><A NAME="v%3Aratio"
+></A
+></A
+><B
+>ratio</B
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+><TD CLASS="rdoc"
+>Scales the height of the chart. The given ratio is multiplied
+   with the <TT
+><A HREF="Graphics-BarChart.html#v%3Asize"
+>size</A
+></TT
+> of bars as given by the corresponding
+   <TT
+><A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+></TT
+> instance.
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:fontSize"
+><A NAME="v%3AfontSize"
+></A
+></A
+><B
+>fontSize</B
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+><TD CLASS="rdoc"
+>Specifies the size of fonts used for labels.
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:barRatio"
+><A NAME="v%3AbarRatio"
+></A
+></A
+><B
+>barRatio</B
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+><TD CLASS="rdoc"
+>Value between 0.0 and 1.0 which pecifies the width of
+   bars. Zero means that the bars are lines and 1.0 means that the
+   is no space between bars.
+</TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><SPAN CLASS="keyword"
+>type</SPAN
+> <A NAME="t:Label"
+><A NAME="t%3ALabel"
+></A
+></A
+><B
+>Label</B
+> = <A HREF="http://code.haskell.org/diagrams/doc/html/base/Data-Char.html#t%3AString"
+>String</A
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#Label"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section2"
+><A NAME="3"
+><A NAME="3"
+>Creating bar charts
+</A
+></A
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>The previous functions use the following helper functions to
+   create a <TT
+><A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+></TT
+> from a CSV file.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:multiBarChart"
+><A NAME="v%3AmultiBarChart"
+></A
+></A
+><B
+>multiBarChart</B
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser.html#multiBarChart"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+>:: (<A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a, <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Read.html#t%3ARead"
+>Read</A
+> a)</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+>=&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>]</TD
+><TD CLASS="rdoc"
+>legend for blocks
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+>-&gt; CSV</TD
+><TD CLASS="rdoc"
+>comma separated values to depict
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+>-&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="ndoc" COLSPAN="2"
+>Used by <TT
+><A HREF="Graphics-BarChart.html#v%3AwriteMultiBarChart"
+>writeMultiBarChart</A
+></TT
+> to create a <TT
+><A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+></TT
+> from a CSV file.
+</TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:intervalChart"
+><A NAME="v%3AintervalChart"
+></A
+></A
+><B
+>intervalChart</B
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser.html#intervalChart"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+>:: (<A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a, <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Read.html#t%3ARead"
+>Read</A
+> a)</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+>=&gt; CSV</TD
+><TD CLASS="rdoc"
+>comma separated values to depict 
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+>-&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="ndoc" COLSPAN="2"
+>Used by <TT
+><A HREF="Graphics-BarChart.html#v%3AwriteIntervalChart"
+>writeIntervalChart</A
+></TT
+> to create a <TT
+><A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+></TT
+> from a CSV file.
+</TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:multiBarIntervalChart"
+><A NAME="v%3AmultiBarIntervalChart"
+></A
+></A
+><B
+>multiBarIntervalChart</B
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser.html#multiBarIntervalChart"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+>:: (<A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a, <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Read.html#t%3ARead"
+>Read</A
+> a)</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+>=&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>]</TD
+><TD CLASS="rdoc"
+>legend for blocks
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+>-&gt; CSV</TD
+><TD CLASS="rdoc"
+>comma separated values to depict
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+>-&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="ndoc" COLSPAN="2"
+>Used by <TT
+><A HREF="Graphics-BarChart.html#v%3AwriteMultiBarIntervalChart"
+>writeMultiBarIntervalChart</A
+></TT
+> to create a <TT
+><A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+></TT
+> from
+ | a CSV file.
+</TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><SPAN CLASS="keyword"
+>class</SPAN
+> <A HREF="http://code.haskell.org/diagrams/doc/html/base/Prelude.html#t%3ANum"
+>Num</A
+> a =&gt; <A NAME="t:Measurable"
+><A NAME="t%3AMeasurable"
+></A
+></A
+><B
+>Measurable</B
+> a  <SPAN CLASS="keyword"
+>where</SPAN
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#Measurable"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Instances of this class can be depicted in bar charts.
+</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+>Methods</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:size"
+><A NAME="v%3Asize"
+></A
+></A
+><B
+>size</B
+> :: a -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#size"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Measures the given value to figure out the correponding height
+   of the bar.
+</TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'i:Measurable')" ALT="show/hide"
+> Instances</TD
+></TR
+><TR
+><TD CLASS="body"
+><DIV ID="i:Measurable" STYLE="display:block;"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3AFloat"
+>Float</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3AInt"
+>Int</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/integer/GHC-Integer.html#t%3AInteger"
+>Integer</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> <A HREF="Graphics-BarChart.html#t%3ARatio"
+>Ratio</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> <A HREF="Graphics-BarChart.html#t%3ARunTime"
+>RunTime</A
+></TD
+></TR
+></TABLE
+></DIV
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section2"
+><A NAME="4"
+><A NAME="4"
+>Bar chart representations
+</A
+></A
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>The three different parsing modes are reflected by three data
+   types that can be parsed from a CSV file.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A NAME="t:MultiBars"
+><A NAME="t%3AMultiBars"
+></A
+></A
+><B
+>MultiBars</B
+> a </TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#MultiBars"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Values of this type are drawn as charts where each bar may
+   consist of multiple blocks.
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:MultiBars"
+><A NAME="v%3AMultiBars"
+></A
+></A
+><B
+>MultiBars</B
+> [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] [(<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>, [a])]</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'i:MultiBars')" ALT="show/hide"
+> Instances</TD
+></TR
+><TR
+><TD CLASS="body"
+><DIV ID="i:MultiBars" STYLE="display:block;"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+> a =&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+> (<A HREF="Graphics-BarChart.html#t%3AMultiBars"
+>MultiBars</A
+> a)</TD
+></TR
+></TABLE
+></DIV
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:parseMultiBars"
+><A NAME="v%3AparseMultiBars"
+></A
+></A
+><B
+>parseMultiBars</B
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Read.html#t%3ARead"
+>Read</A
+> a =&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] -&gt; CSV -&gt; <A HREF="Graphics-BarChart.html#t%3AMultiBars"
+>MultiBars</A
+> a</TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser.html#parseMultiBars"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Converts a CSV file to be drawn as a chart where each bar may
+   consist of multiple blocks.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:drawMultiBars"
+><A NAME="v%3AdrawMultiBars"
+></A
+></A
+><B
+>drawMultiBars</B
+> :: <A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a =&gt; <A HREF="Graphics-BarChart.html#t%3AMultiBars"
+>MultiBars</A
+> a -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a</TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#drawMultiBars"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Converts bars with multiple blocks into their <TT
+><A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+></TT
+>
+   representation.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><SPAN CLASS="keyword"
+>newtype</SPAN
+>  <A NAME="t:Intervals"
+><A NAME="t%3AIntervals"
+></A
+></A
+><B
+>Intervals</B
+> a </TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#Intervals"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Values of this type are drawn as charts where each bar has an
+   associated deviation depicted as an interval next to the bar.
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:Intervals"
+><A NAME="v%3AIntervals"
+></A
+></A
+><B
+>Intervals</B
+> [(<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>, (a, a, a))]</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'i:Intervals')" ALT="show/hide"
+> Instances</TD
+></TR
+><TR
+><TD CLASS="body"
+><DIV ID="i:Intervals" STYLE="display:block;"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+> a =&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+> (<A HREF="Graphics-BarChart.html#t%3AIntervals"
+>Intervals</A
+> a)</TD
+></TR
+></TABLE
+></DIV
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:parseIntervals"
+><A NAME="v%3AparseIntervals"
+></A
+></A
+><B
+>parseIntervals</B
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Read.html#t%3ARead"
+>Read</A
+> a =&gt; CSV -&gt; <A HREF="Graphics-BarChart.html#t%3AIntervals"
+>Intervals</A
+> a</TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser.html#parseIntervals"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Converts a CSV file to be drawn as a chart where each bar has an
+   attached deviation depicted as an interval next to the bar.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:drawIntervals"
+><A NAME="v%3AdrawIntervals"
+></A
+></A
+><B
+>drawIntervals</B
+> :: <A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a =&gt; <A HREF="Graphics-BarChart.html#t%3AIntervals"
+>Intervals</A
+> a -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a</TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#drawIntervals"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Converts bars with associated deviation into their <TT
+><A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+></TT
+>
+   representation.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A NAME="t:MultiBarIntervals"
+><A NAME="t%3AMultiBarIntervals"
+></A
+></A
+><B
+>MultiBarIntervals</B
+> a </TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#MultiBarIntervals"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Values of this type are drawn as charts where each bar may be
+   divided into multiple blocks with an associated deviation
+   depicted as intervals next to them.
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:MBIntervals"
+><A NAME="v%3AMBIntervals"
+></A
+></A
+><B
+>MBIntervals</B
+> [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] [(<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>, [(a, a, a)])]</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'i:MultiBarIntervals')" ALT="show/hide"
+> Instances</TD
+></TR
+><TR
+><TD CLASS="body"
+><DIV ID="i:MultiBarIntervals" STYLE="display:block;"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+> a =&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+> (<A HREF="Graphics-BarChart.html#t%3AMultiBarIntervals"
+>MultiBarIntervals</A
+> a)</TD
+></TR
+></TABLE
+></DIV
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:parseMultiBarIntervals"
+><A NAME="v%3AparseMultiBarIntervals"
+></A
+></A
+><B
+>parseMultiBarIntervals</B
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Read.html#t%3ARead"
+>Read</A
+> a =&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] -&gt; CSV -&gt; <A HREF="Graphics-BarChart.html#t%3AMultiBarIntervals"
+>MultiBarIntervals</A
+> a</TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser.html#parseMultiBarIntervals"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Converts a CSV file to be drawn as a chart where each bar may
+   consist of multiple blocks which have an attached deviation
+   depicted as an interval next to them.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:drawMultiBarIntervals"
+><A NAME="v%3AdrawMultiBarIntervals"
+></A
+></A
+><B
+>drawMultiBarIntervals</B
+> :: <A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a =&gt; <A HREF="Graphics-BarChart.html#t%3AMultiBarIntervals"
+>MultiBarIntervals</A
+> a -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a</TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#drawMultiBarIntervals"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Converts bars with multiple blocks and associated deviations into
+   their <TT
+><A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+></TT
+> representation.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>When you have multiple CSV files representing an interval
+   chart, you can merge them to a single multi-bar interval
+   chart. Such charts can be flipped such that bars and blocks
+   change their roles.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:mergeIntervals"
+><A NAME="v%3AmergeIntervals"
+></A
+></A
+><B
+>mergeIntervals</B
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/base/Prelude.html#t%3ANum"
+>Num</A
+> a =&gt; [(<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>, <A HREF="Graphics-BarChart.html#t%3AIntervals"
+>Intervals</A
+> a)] -&gt; <A HREF="Graphics-BarChart.html#t%3AMultiBarIntervals"
+>MultiBarIntervals</A
+> a</TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#mergeIntervals"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Merges several interval charts into a chart where each bar has
+   multiple blocks that represent the different interval charts.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:flipMultiBarIntervals"
+><A NAME="v%3AflipMultiBarIntervals"
+></A
+></A
+><B
+>flipMultiBarIntervals</B
+> ::  <A HREF="Graphics-BarChart.html#t%3AMultiBarIntervals"
+>MultiBarIntervals</A
+> a -&gt; <A HREF="Graphics-BarChart.html#t%3AMultiBarIntervals"
+>MultiBarIntervals</A
+> a</TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#flipMultiBarIntervals"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Swaps bars and blocks of a chart that contains both and
+   associated deviations.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Bar charts are represented as values of type <TT
+><A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+></TT
+> <TT
+>a</TT
+>.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A NAME="t:BarChart"
+><A NAME="t%3ABarChart"
+></A
+></A
+><B
+>BarChart</B
+> a </TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#BarChart"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Bar charts consist of a (possibly empty) list of labels for the
+   diferent blcks of bars and the bars themselves.
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="5" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:BarChart"
+><A NAME="v%3ABarChart"
+></A
+></A
+><B
+>BarChart</B
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="body" COLSPAN="2"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:block_labels"
+><A NAME="v%3Ablock_labels"
+></A
+></A
+><B
+>block_labels</B
+> :: [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>]</TD
+><TD CLASS="rdoc"
+>Labels of blocks in bars. Drawn as a legend if non-empty.
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:bars"
+><A NAME="v%3Abars"
+></A
+></A
+><B
+>bars</B
+> :: [<A HREF="Graphics-BarChart.html#t%3ABar"
+>Bar</A
+> a]</TD
+><TD CLASS="rdoc"
+>The different bars of the chart.
+</TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'i:BarChart')" ALT="show/hide"
+> Instances</TD
+></TR
+><TR
+><TD CLASS="body"
+><DIV ID="i:BarChart" STYLE="display:block;"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+> a =&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+> (<A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a)</TD
+></TR
+></TABLE
+></DIV
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A NAME="t:Bar"
+><A NAME="t%3ABar"
+></A
+></A
+><B
+>Bar</B
+> a </TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#Bar"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Represents one bar of a bar chart.
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="5" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:Bar"
+><A NAME="v%3ABar"
+></A
+></A
+><B
+>Bar</B
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="body" COLSPAN="2"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:label"
+><A NAME="v%3Alabel"
+></A
+></A
+><B
+>label</B
+> :: <A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+></TD
+><TD CLASS="rdoc"
+>Label written underneath
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:blocks"
+><A NAME="v%3Ablocks"
+></A
+></A
+><B
+>blocks</B
+> :: [<A HREF="Graphics-BarChart.html#t%3ABlock"
+>Block</A
+> a]</TD
+><TD CLASS="rdoc"
+>Different blocks of the bar. Simple charts contain only one
+   block per bar.
+</TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'i:Bar')" ALT="show/hide"
+> Instances</TD
+></TR
+><TR
+><TD CLASS="body"
+><DIV ID="i:Bar" STYLE="display:block;"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+> a =&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+> (<A HREF="Graphics-BarChart.html#t%3ABar"
+>Bar</A
+> a)</TD
+></TR
+></TABLE
+></DIV
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A NAME="t:Block"
+><A NAME="t%3ABlock"
+></A
+></A
+><B
+>Block</B
+> a </TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#Block"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Bocks either have a single associated value or a mean value along
+   with minimum and maximum deviation.
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="5" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:Value"
+><A NAME="v%3AValue"
+></A
+></A
+><B
+>Value</B
+> a</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:Interval"
+><A NAME="v%3AInterval"
+></A
+></A
+><B
+>Interval</B
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="body" COLSPAN="2"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:mean"
+><A NAME="v%3Amean"
+></A
+></A
+><B
+>mean</B
+> :: a</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:lower"
+><A NAME="v%3Alower"
+></A
+></A
+><B
+>lower</B
+> :: a</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:upper"
+><A NAME="v%3Aupper"
+></A
+></A
+><B
+>upper</B
+> :: a</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'i:Block')" ALT="show/hide"
+> Instances</TD
+></TR
+><TR
+><TD CLASS="body"
+><DIV ID="i:Block" STYLE="display:block;"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+> a =&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+> (<A HREF="Graphics-BarChart.html#t%3ABlock"
+>Block</A
+> a)</TD
+></TR
+></TABLE
+></DIV
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+><A NAME="5"
+><A NAME="5"
+>Rendering
+</A
+></A
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Values of type <TT
+><A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+></TT
+> <TT
+>a</TT
+> can be rendered to PNG, SVG, PDF,
+   and PS files.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:render"
+><A NAME="v%3Arender"
+></A
+></A
+><B
+>render</B
+> :: <A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a =&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Rendering.html#render"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Renders a bar chart as <TT
+>barchart.png</TT
+> according to the default
+   configuration <TT
+><A HREF="Graphics-BarChart.html#v%3Aconf"
+>conf</A
+></TT
+>.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:renderWith"
+><A NAME="v%3ArenderWith"
+></A
+></A
+><B
+>renderWith</B
+> :: <A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a =&gt; <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+> -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Rendering.html#renderWith"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Renders a bar chart according to a custom configuration.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:conf"
+><A NAME="v%3Aconf"
+></A
+></A
+><B
+>conf</B
+> :: <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#conf"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>The default configuration generates a PNG file with a chart of
+   size 600x300 pixels. The output file is left unspecified and you
+   should provide one if you use a cstom configuration.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section2"
+><A NAME="6"
+><A NAME="6"
+>Creating diagrams
+</A
+></A
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Bar charts are rendered by conversion into Diagrams.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:diagram"
+><A NAME="v%3Adiagram"
+></A
+></A
+><B
+>diagram</B
+> :: <A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> a =&gt; <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+> -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> a -&gt; Diagram</TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Rendering.html#diagram"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>This function can be used to embed bar charts into bigger
+   <TT
+>Diagram</TT
+>s.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+><A NAME="7"
+><A NAME="7"
+>Benchmarking visualisation
+</A
+></A
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>There are special functions for parsing data generated by the
+   benchmarking tools criterion and progression.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section2"
+><A NAME="8"
+><A NAME="8"
+>Criterion
+</A
+></A
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:writeCriterionChart"
+><A NAME="v%3AwriteCriterionChart"
+></A
+></A
+><B
+>writeCriterionChart</B
+> :: <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+> -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+> -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser-Criterion.html#writeCriterionChart"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Reads a summary file generated by criterion and writes a
+   corresponding bar chart.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:writeComparisonChart"
+><A NAME="v%3AwriteComparisonChart"
+></A
+></A
+><B
+>writeComparisonChart</B
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Bool.html#t%3ABool"
+>Bool</A
+> -&gt; <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+> -&gt; [<A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+>] -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser-Criterion.html#writeComparisonChart"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Reads multiple summary files generated by criterion and creates a
+   bar chart to compare them. If the first argument is <TT
+><A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Bool.html#v%3ATrue"
+>True</A
+></TT
+> the
+   chart is flipped such that the bars represent different
+   benchmarks rather than summaries.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:criterionChart"
+><A NAME="v%3AcriterionChart"
+></A
+></A
+><B
+>criterionChart</B
+> :: CSV -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> <A HREF="Graphics-BarChart.html#t%3ARunTime"
+>RunTime</A
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser-Criterion.html#criterionChart"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Used by <TT
+><A HREF="Graphics-BarChart.html#v%3AwriteCriterionChart"
+>writeCriterionChart</A
+></TT
+> to generate a bar chart from
+   criterion's summary file.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:comparisonChart"
+><A NAME="v%3AcomparisonChart"
+></A
+></A
+><B
+>comparisonChart</B
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Bool.html#t%3ABool"
+>Bool</A
+> -&gt; [(<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>, CSV)] -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> <A HREF="Graphics-BarChart.html#t%3ARunTime"
+>RunTime</A
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser-Criterion.html#comparisonChart"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Used by <TT
+><A HREF="Graphics-BarChart.html#v%3AwriteComparisonChart"
+>writeComparisonChart</A
+></TT
+> to generate a bar chart from
+   multiple summary files generated by criterion.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><SPAN CLASS="keyword"
+>newtype</SPAN
+>  <A NAME="t:RunTime"
+><A NAME="t%3ARunTime"
+></A
+></A
+><B
+>RunTime</B
+>  </TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#RunTime"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Wrapper around the <TT
+><A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TT
+> type used in bar charts for criterion
+   summary files. It has a custom <TT
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+></TT
+> instance to produce labels
+   like <TT
+>10ms</TT
+> or <TT
+>2h</TT
+> rather than showing the plain <TT
+><A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TT
+>
+   values.
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:RunTime"
+><A NAME="v%3ARunTime"
+></A
+></A
+><B
+>RunTime</B
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'i:RunTime')" ALT="show/hide"
+> Instances</TD
+></TR
+><TR
+><TD CLASS="body"
+><DIV ID="i:RunTime" STYLE="display:block;"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Data-Eq.html#t%3AEq"
+>Eq</A
+> <A HREF="Graphics-BarChart.html#t%3ARunTime"
+>RunTime</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Prelude.html#t%3ANum"
+>Num</A
+> <A HREF="Graphics-BarChart.html#t%3ARunTime"
+>RunTime</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Read.html#t%3ARead"
+>Read</A
+> <A HREF="Graphics-BarChart.html#t%3ARunTime"
+>RunTime</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+> <A HREF="Graphics-BarChart.html#t%3ARunTime"
+>RunTime</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> <A HREF="Graphics-BarChart.html#t%3ARunTime"
+>RunTime</A
+></TD
+></TR
+></TABLE
+></DIV
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section2"
+><A NAME="9"
+><A NAME="9"
+>Progression
+</A
+></A
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:writeProgressionChart"
+><A NAME="v%3AwriteProgressionChart"
+></A
+></A
+><B
+>writeProgressionChart</B
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Bool.html#t%3ABool"
+>Bool</A
+> -&gt; <A HREF="Graphics-BarChart.html#t%3AConfig"
+>Config</A
+> -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+> -&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] -&gt; <A HREF="http://code.haskell.org/diagrams/doc/html/base/System-IO.html#t%3AIO"
+>IO</A
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Unit.html#t%3A%28%29"
+>()</A
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser-Progression.html#writeProgressionChart"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Reads the <TT
+>plot.csv</TT
+> file generated by progression and creates a
+   corresponding bar chart.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><A NAME="v:progressionChart"
+><A NAME="v%3AprogressionChart"
+></A
+></A
+><B
+>progressionChart</B
+> :: <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Bool.html#t%3ABool"
+>Bool</A
+> -&gt; [<A HREF="Graphics-BarChart.html#t%3ALabel"
+>Label</A
+>] -&gt; CSV -&gt; <A HREF="Graphics-BarChart.html#t%3ABarChart"
+>BarChart</A
+> <A HREF="Graphics-BarChart.html#t%3ARatio"
+>Ratio</A
+></TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Parser-Progression.html#progressionChart"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Used by <TT
+><A HREF="Graphics-BarChart.html#v%3AwriteProgressionChart"
+>writeProgressionChart</A
+></TT
+> to generate a bar chart from
+   progression's <TT
+>plot.csv</TT
+> file.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="topdecl"
+><TABLE CLASS="declbar"
+><TR
+><TD CLASS="declname"
+><SPAN CLASS="keyword"
+>newtype</SPAN
+>  <A NAME="t:Ratio"
+><A NAME="t%3ARatio"
+></A
+></A
+><B
+>Ratio</B
+>  </TD
+><TD CLASS="declbut"
+><A HREF="src/Graphics-BarChart-Types.html#Ratio"
+>Source</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Wrapper around the double type used in bar charts for progression
+   summaries. It has a custom <TT
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+></TT
+> instance that shows the <TT
+><A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TT
+>
+   values as percentages.
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:Ratio"
+><A NAME="v%3ARatio"
+></A
+></A
+><B
+>Ratio</B
+> <A HREF="http://code.haskell.org/diagrams/doc/html/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'i:Ratio')" ALT="show/hide"
+> Instances</TD
+></TR
+><TR
+><TD CLASS="body"
+><DIV ID="i:Ratio" STYLE="display:block;"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Data-Eq.html#t%3AEq"
+>Eq</A
+> <A HREF="Graphics-BarChart.html#t%3ARatio"
+>Ratio</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Prelude.html#t%3ANum"
+>Num</A
+> <A HREF="Graphics-BarChart.html#t%3ARatio"
+>Ratio</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Read.html#t%3ARead"
+>Read</A
+> <A HREF="Graphics-BarChart.html#t%3ARatio"
+>Ratio</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="http://code.haskell.org/diagrams/doc/html/base/Text-Show.html#t%3AShow"
+>Show</A
+> <A HREF="Graphics-BarChart.html#t%3ARatio"
+>Ratio</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="Graphics-BarChart.html#t%3AMeasurable"
+>Measurable</A
+> <A HREF="Graphics-BarChart.html#t%3ARatio"
+>Ratio</A
+></TD
+></TR
+></TABLE
+></DIV
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="botbar"
+>Produced by <A HREF="http://www.haskell.org/haddock/"
+>Haddock</A
+> version 2.5.0</TD
+></TR
+></TABLE
+></BODY
+></HTML
+>

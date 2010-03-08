@@ -324,7 +324,7 @@ For questions or feedback email [Sebastian Fischer][email].
 
 [Hackage]: http://hackage.haskell.org/package/barchart
 [Haskell Platform]: http://hackage.haskell.org/platform/
-[API]: http://hackage.haskell.org/packages/archive/barchart/latest/doc/html/Graphics-BarChart.html
+[API]: http://sebfisch.github.com/haskell-barchart/api/doc/html/barchart/index.html
 
 [guitar]: http://sebfisch.github.com/haskell-barchart/examples/guitar.png
 [guitar-mean]: http://sebfisch.github.com/haskell-barchart/examples/guitar-mean.png

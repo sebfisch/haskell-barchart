@@ -1,5 +1,5 @@
 Name:          barchart
-Version:       0.1.1
+Version:       0.1.1.1
 Cabal-Version: >= 1.6
 Synopsis:      Creating Bar Charts in Haskell
 
@@ -28,7 +28,7 @@ Executable barchart
   Main-is:              barchart.hs
   Hs-Source-Dirs:       src
   Build-Depends:        base >= 3 && < 5,
-                        cmdargs >= 0.1 && < 0.2, 
+                        cmdargs >= 0.3 && < 0.4, 
                         csv >= 0.1 && < 1.2, 
                         diagrams >= 0.2 && < 0.3,
                         filepath >= 1.1 && < 1.2
@@ -38,6 +38,7 @@ Executable barchart
                         NamedFieldPuns, 
                         RecordWildCards,
                         TypeFamilies
+  GHC-Options:          -fno-warn-missing-fields
 
 Library
   Exposed-Modules:      Graphics.BarChart

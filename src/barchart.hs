@@ -69,6 +69,7 @@ replaceUnknownFileType t               _ = t
 data Breakdown = Summary | Summary_Comparison | Benchmark_Comparison
  deriving (Eq,Show,Data,Typeable)
 
+blocksMode :: BarChart
 blocksMode =
   Blocks {
     out_file   = outFile conf
@@ -77,7 +78,9 @@ blocksMode =
     file_type  = enum [Guess_File_Type
                            &= help "Guess output file type by name (default)",
                        PNG &= help "Generate .png file",
-                       SVG &= help "Generate .svg file",
+                       SVG &= help "Generate .svg file"
+                           &= explicit
+                           &= name "svg",
                        PDF &= help "Generate .pdf file",
                        PS  &= help "Generate .ps file"],
     title      = caption conf
@@ -89,7 +92,7 @@ blocksMode =
     ylabel     = xLabel conf
                     &= help "Label of y axis"
                     &= typString,
-    division  = "" &= help "Labels separated by whitespace"
+    division   = "" &= help "Labels separated by whitespace"
                     &= typStrings,
     colors     = "" &= help "Color names separated by whitespace"
                     &= typStrings,
@@ -105,13 +108,15 @@ blocksMode =
                     &= help "Bar width between 0 and 1"
                     &= name "W"
                     &= typ "FLOAT",
-    in_files   = [] &= help "CVS files with data to visualise"
-                    &= args
-                    &= typ "FILES" }
+    in_files   = [] &= typ "FILES"
+                    &= args }
  where (width,height) = dimensions conf
+
+intervalsMode :: BarChart
 
 intervalsMode = Intervals {}
 
+criterionMode :: BarChart
 criterionMode =
   Criterion {
     breakdown  = enum [Summary
@@ -123,6 +128,7 @@ criterionMode =
                         &= help "Compare different benchmarks"
                         &= name "b"] }
 
+progressionMode :: BarChart
 progressionMode =
   Progression {
     breakdown  = enum [Summary_Comparison
@@ -132,18 +138,23 @@ progressionMode =
                         &= help "Breakdown chart by benchmarks"
                         &= name "b"] }
 
+typString, typStrings :: Ann
 typString  = typ "STRING"
 typStrings = typ "STRINGS"
 
+execModes :: [BarChart]
 execModes = [blocksMode &= auto,
              intervalsMode, criterionMode, progressionMode]
 
+exitIf :: String -> Bool -> IO ()
 exitIf msg cond = when cond (error msg)
 
+main :: IO ()
 main = do execMode <- cmdArgs (modes execModes)
           exitIf "no input files given" $ null (in_files execMode)
           dispatch execMode
 
+dispatch :: BarChart -> IO ()
 dispatch mode@Blocks{..} =
   forM_ in_files $ \in_file ->
     writeMultiBarChart
@@ -209,11 +220,13 @@ guessDefaults in_file = guessColors . guessTitle . guessFileType . guessOutFile
   guessColors mode =
     mode { colors = colors mode ? "forestgreen firebrick midnightblue" }
 
+guessBenchmarkDefaults :: FilePath -> BarChart -> BarChart
 guessBenchmarkDefaults in_file = guessAxis . guessDefaults in_file
  where
   guessAxis mode = mode { xlabel = xlabel mode ? "benchmark",
                           ylabel = ylabel mode ? "run time" }
 
+config :: BarChart -> Config
 config mode = Config {
   outFile = out_file mode,
   outputType = fromFileType $ file_type mode,

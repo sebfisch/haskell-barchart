@@ -28,7 +28,7 @@ Executable barchart
   Main-is:              barchart.hs
   Hs-Source-Dirs:       src
   Build-Depends:        base >= 3 && < 5,
-                        cmdargs >= 0.2 && < 0.7,
+                        cmdargs >= 0.4 && < 0.7,
                         csv >= 0.1 && < 1.2,
                         diagrams >= 0.2 && < 0.3,
                         filepath >= 1.1 && < 1.3

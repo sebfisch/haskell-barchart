@@ -1,5 +1,4 @@
 {-# LANGUAGE NamedFieldPuns, RecordWildCards, DeriveDataTypeable #-}
-{-# OPTIONS_GHC -fno-cse #-}
 
 import Graphics.BarChart hiding ( Intervals, BarChart )
 import Graphics.BarChart.Types ( readColor )
@@ -70,19 +69,20 @@ replaceUnknownFileType t               _ = t
 data Breakdown = Summary | Summary_Comparison | Benchmark_Comparison
  deriving (Eq,Show,Data,Typeable)
 
-blocksMode :: ExecMode
+blocksMode :: BarChart
 blocksMode =
   Blocks {
     out_file   = outFile conf
                     &= help "Name of generated file"
                     &= typFile,
-    file_type  = enum
-                    [Guess_File_Type
-                         &= help "Guess output file type by name (default)",
-                     PNG &= help "Generate .png file",
-                     SVG &= help "Generate .svg file",
-                     PDF &= help "Generate .pdf file",
-                     PS  &= help "Generate .ps file"],
+    file_type  = enum [Guess_File_Type
+                           &= help "Guess output file type by name (default)",
+                       PNG &= help "Generate .png file",
+                       SVG &= help "Generate .svg file"
+                           &= explicit
+                           &= name "svg",
+                       PDF &= help "Generate .pdf file",
+                       PS  &= help "Generate .ps file"],
     title      = caption conf
                     &= help "Title of bar chart"
                     &= typString,
@@ -112,154 +112,36 @@ blocksMode =
                     &= args }
  where (width,height) = dimensions conf
 
--- cannot reuse flag attributes in cmdargs :(
-intervalsMode :: ExecMode
-intervalsMode =
-  Intervals {
-    out_file   = outFile conf
-                    &= help "Name of generated file"
-                    &= typFile,
-    file_type  = enum
-                    [Guess_File_Type
-                         &= help "Guess output file type by name (default)",
-                     PNG &= help "Generate .png file",
-                     SVG &= help "Generate .svg file",
-                     PDF &= help "Generate .pdf file",
-                     PS  &= help "Generate .ps file"],
-    title      = caption conf
-                    &= help "Title of bar chart"
-                    &= typString,
-    xlabel     = xLabel conf
-                    &= help "Label of x axis"
-                    &= typString,
-    ylabel     = xLabel conf
-                    &= help "Label of y axis"
-                    &= typString,
-    division   = "" &= help "Labels separated by whitespace"
-                    &= typStrings,
-    colors     = "" &= help "Color names separated by whitespace"
-                    &= typStrings,
-    width      = width
-                    &= help "Width of generated bar chart"
-                    &= typ "NUM",
-    height     = height
-                    &= help "Height of generated bar chart"
-                    &= typ "NUM",
-    label_size = 12 &= help "Font size used for labels"
-                    &= typ "NUM",
-    bar_width  = barRatio conf
-                    &= help "Bar width between 0 and 1"
-                    &= name "W"
-                    &= typ "FLOAT",
-    in_files   = [] &= typ "FILES"
-                    &= args }
- where (width,height) = dimensions conf
+intervalsMode :: BarChart
+intervalsMode = Intervals {}
 
-criterionMode :: ExecMode
+criterionMode :: BarChart
 criterionMode =
   Criterion {
-    out_file   = outFile conf
-                    &= help "Name of generated file"
-                    &= typFile,
-    file_type  = enum
-                    [Guess_File_Type
-                         &= help "Guess output file type by name (default)",
-                     PNG &= help "Generate .png file",
-                     SVG &= help "Generate .svg file",
-                     PDF &= help "Generate .pdf file",
-                     PS  &= help "Generate .ps file"],
-    title      = caption conf
-                    &= help "Title of bar chart"
-                    &= typString,
-    xlabel     = xLabel conf
-                    &= help "Label of x axis"
-                    &= typString,
-    ylabel     = xLabel conf
-                    &= help "Label of y axis"
-                    &= typString,
-    division   = "" &= help "Labels separated by whitespace"
-                    &= typStrings,
-    colors     = "" &= help "Color names separated by whitespace"
-                    &= typStrings,
-    width      = width
-                    &= help "Width of generated bar chart"
-                    &= typ "NUM",
-    height     = height
-                    &= help "Height of generated bar chart"
-                    &= typ "NUM",
-    label_size = 12 &= help "Font size used for labels"
-                    &= typ "NUM",
-    bar_width  = barRatio conf
-                    &= help "Bar width between 0 and 1"
-                    &= name "W"
-                    &= typ "FLOAT",
-    in_files   = [] &= typ "FILES"
-                    &= args,
-    breakdown  = enum
-                  [Summary
-                    &= help "Show benchmark summary (default)",
-                   Summary_Comparison
-                    &= help "Compare different benchmark summaries"
-                    &= name "s",
-                   Benchmark_Comparison
-                    &= help "Compare different benchmarks"
-                    &= name "b"] }
- where (width,height) = dimensions conf
+    breakdown  = enum [Summary
+                        &= help "Show benchmark summary (default)",
+                       Summary_Comparison
+                        &= help "Compare different benchmark summaries"
+                        &= name "s",
+                       Benchmark_Comparison
+                        &= help "Compare different benchmarks"
+                        &= name "b"] }
 
-progressionMode :: ExecMode
+progressionMode :: BarChart
 progressionMode =
   Progression {
-    out_file   = outFile conf
-                    &= help "Name of generated file"
-                    &= typFile,
-    file_type  = enum
-                    [Guess_File_Type
-                         &= help "Guess output file type by name (default)",
-                     PNG &= help "Generate .png file",
-                     SVG &= help "Generate .svg file",
-                     PDF &= help "Generate .pdf file",
-                     PS  &= help "Generate .ps file"],
-    title      = caption conf
-                    &= help "Title of bar chart"
-                    &= typString,
-    xlabel     = xLabel conf
-                    &= help "Label of x axis"
-                    &= typString,
-    ylabel     = xLabel conf
-                    &= help "Label of y axis"
-                    &= typString,
-    division   = "" &= help "Labels separated by whitespace"
-                    &= typStrings,
-    colors     = "" &= help "Color names separated by whitespace"
-                    &= typStrings,
-    width      = width
-                    &= help "Width of generated bar chart"
-                    &= typ "NUM",
-    height     = height
-                    &= help "Height of generated bar chart"
-                    &= typ "NUM",
-    label_size = 12 &= help "Font size used for labels"
-                    &= typ "NUM",
-    bar_width  = barRatio conf
-                    &= help "Bar width between 0 and 1"
-                    &= name "W"
-                    &= typ "FLOAT",
-    in_files   = [] &= typ "FILES"
-                    &= args,
-    breakdown  = enum
-                  [Summary_Comparison
-                    &= help "Breakdown chart by benchmark summary (default)"
-                    &= name "s",
-                   Benchmark_Comparison
-                    &= help "Breakdown chart by benchmarks"
-                    &= name "b"] }
- where (width,height) = dimensions conf
+    breakdown  = enum [Summary_Comparison
+                        &= help "Breakdown chart by benchmark summary (default)"
+                        &= name "s",
+                       Benchmark_Comparison
+                        &= help "Breakdown chart by benchmarks"
+                        &= name "b"] }
 
 typString, typStrings :: Ann
 typString  = typ "STRING"
 typStrings = typ "STRINGS"
 
-execModes :: [ExecMode]
+execModes :: [BarChart]
 execModes = [blocksMode &= auto,
              intervalsMode, criterionMode, progressionMode]
 
@@ -267,13 +149,11 @@ exitIf :: String -> Bool -> IO ()
 exitIf msg cond = when cond (error msg)
 
 main :: IO ()
-main = do execMode <- cmdArgs $ modes execModes
-                                &= summary "Bar Chart 0.1.1"
-                                &= program "barchart"
+main = do execMode <- cmdArgs (modes execModes)
           exitIf "no input files given" $ null (in_files execMode)
           dispatch execMode
 
-dispatch :: ExecMode -> IO ()
+dispatch :: BarChart -> IO ()
 dispatch mode@Blocks{..} =
   forM_ in_files $ \in_file ->
     writeMultiBarChart
@@ -339,13 +219,13 @@ guessDefaults in_file = guessColors . guessTitle . guessFileType . guessOutFile
   guessColors mode =
     mode { colors = colors mode ? "forestgreen firebrick midnightblue" }
 
-guessBenchmarkDefaults :: FilePath -> ExecMode -> ExecMode
+guessBenchmarkDefaults :: FilePath -> BarChart -> BarChart
 guessBenchmarkDefaults in_file = guessAxis . guessDefaults in_file
  where
   guessAxis mode = mode { xlabel = xlabel mode ? "benchmark",
                           ylabel = ylabel mode ? "run time" }
 
-config :: ExecMode -> Config
+config :: BarChart -> Config
 config mode = Config {
   outFile = out_file mode,
   outputType = fromFileType $ file_type mode,
